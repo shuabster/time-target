@@ -1,0 +1,1259 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Target Multiplayer</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0b0d14;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  padding: 15px;
+}
+
+.game {
+  width: 100%;
+  max-width: 620px;
+  background: #191c29;
+  border-radius: 25px;
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: 0 20px 60px #000;
+}
+
+h1 {
+  margin: 0;
+  font-size: 35px;
+}
+
+.subtitle {
+  color: #9da5bb;
+  margin: 10px 0 25px;
+  line-height: 1.4;
+}
+
+/* SETUP */
+
+.setup h2 {
+  margin-top: 25px;
+}
+
+input {
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid #454a5d;
+  background: #080a10;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  outline: none;
+  margin-bottom: 12px;
+}
+
+.setup button {
+  width: 100%;
+  background: #286e9d;
+}
+
+/* PLAYER */
+
+.player-turn {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 15px 0;
+  color: #63b3ff;
+}
+
+/* TARGET */
+
+.target-area {
+  margin-bottom: 15px;
+}
+
+.target-label {
+  color: #9da5bb;
+  font-size: 14px;
+}
+
+.target {
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+/* TIMER */
+
+.timer-box {
+  width: 100%;
+  height: 120px;
+  margin: 25px 0;
+  border-radius: 18px;
+  background: #050505;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.timer {
+  font-family: monospace;
+  font-size: clamp(55px, 17vw, 90px);
+  font-weight: bold;
+  letter-spacing: 4px;
+}
+
+/* STATUS */
+
+.status {
+  color: #b7bdd0;
+  min-height: 25px;
+  margin-bottom: 18px;
+}
+
+/* BUTTONS */
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+button {
+  border: 0;
+  border-radius: 14px;
+  padding: 16px 10px;
+  min-height: 57px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: #383e53;
+  cursor: pointer;
+}
+
+button:active:not(:disabled) {
+  transform: scale(.96);
+}
+
+button:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+.start {
+  background: #247d51;
+}
+
+.stop {
+  background: #a63e4b;
+}
+
+.show {
+  background: #6650a8;
+}
+
+.random {
+  background: #24628c;
+}
+
+.custom {
+  background: #80562c;
+}
+
+.reset {
+  background: #34394b;
+}
+
+.next {
+  width: 100%;
+  background: #286e9d;
+  margin-top: 12px;
+}
+
+/* CUSTOM */
+
+.custom-area {
+  display: none;
+  margin-top: 15px;
+  padding: 15px;
+  background: #11131c;
+  border-radius: 15px;
+}
+
+.custom-area.showing {
+  display: block;
+}
+
+.custom-area button {
+  width: 100%;
+  background: #80562c;
+}
+
+/* RESULT */
+
+.result {
+  margin-top: 25px;
+  font-size: 22px;
+  font-weight: bold;
+  min-height: 35px;
+}
+
+.good {
+  color: #61e5a0;
+}
+
+.close {
+  color: #ffd166;
+}
+
+.bad {
+  color: #ff7180;
+}
+
+/* WINNER */
+
+.winner {
+  display: none;
+  margin-top: 25px;
+  padding: 25px 15px;
+  border-radius: 18px;
+  background: #11131c;
+}
+
+.winner.show {
+  display: block;
+}
+
+.winner-title {
+  font-size: 18px;
+  color: #aeb5ca;
+}
+
+.winner-name {
+  font-size: 42px;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #ffd166;
+}
+
+.winner-score {
+  color: #b7bdd0;
+}
+
+/* SCORES */
+
+.history {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #ffffff12;
+  text-align: left;
+}
+
+.history h2 {
+  font-size: 18px;
+  color: #aeb5ca;
+}
+
+.round {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 11px 0;
+  border-bottom: 1px solid #ffffff10;
+  color: #d8dbea;
+  font-size: 14px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 400px) {
+  .round {
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+<h1>⏱️ Time Target</h1>
+
+<div class="subtitle">
+Everyone gets the same target. Closest player wins.
+</div>
+
+
+<!-- =========================
+     SETUP
+========================= -->
+
+<div id="setup">
+
+<h2>How many players?</h2>
+
+<input
+  id="playerCountInput"
+  type="number"
+  min="1"
+  step="1"
+  inputmode="numeric"
+  placeholder="Enter number of players"
+>
+
+<button id="startGameBtn">
+👥 Start Game
+</button>
+
+</div>
+
+
+<!-- =========================
+     GAME
+========================= -->
+
+<div id="gameArea" class="hidden">
+
+<div id="playerTurn" class="player-turn">
+Player 1's Turn
+</div>
+
+
+<!-- ONE SHARED TARGET -->
+
+<div class="target-area">
+
+<div class="target-label">
+EVERYONE'S TARGET
+</div>
+
+<div id="target" class="target">
+--.--
+</div>
+
+</div>
+
+
+<!-- TIMER -->
+
+<div class="timer-box">
+
+<div id="timer" class="timer">
+--:--
+</div>
+
+</div>
+
+
+<div id="status" class="status">
+Choose the target.
+</div>
+
+
+<!-- TARGET BUTTONS -->
+
+<div class="buttons">
+
+<button id="randomBtn" class="random">
+🎲 Random Target
+</button>
+
+<button id="customBtn" class="custom">
+🎯 Custom Target
+</button>
+
+</div>
+
+
+<!-- CUSTOM TARGET -->
+
+<div id="customArea" class="custom-area">
+
+<input
+  id="customInput"
+  type="number"
+  min="0.01"
+  step="0.01"
+  inputmode="decimal"
+  placeholder="Target in seconds"
+>
+
+<button id="setCustomBtn">
+Set Target For Everyone
+</button>
+
+</div>
+
+
+<!-- START / STOP / SHOW -->
+
+<div class="buttons" style="margin-top:10px;">
+
+<button id="startStopBtn"
+        class="start"
+        disabled>
+▶ Start
+</button>
+
+<button id="showBtn"
+        class="show"
+        disabled>
+👁 Show Time
+</button>
+
+</div>
+
+
+<!-- RESULT -->
+
+<div id="result" class="result"></div>
+
+
+<!-- NEXT -->
+
+<div id="nextArea" class="hidden">
+
+<button id="nextBtn" class="next">
+➡️ Next Player
+</button>
+
+</div>
+
+
+<!-- WINNER -->
+
+<div id="winner" class="winner">
+
+<div class="winner-title">
+🏆 WINNER
+</div>
+
+<div id="winnerName" class="winner-name">
+Player 1
+</div>
+
+<div id="winnerScore" class="winner-score"></div>
+
+</div>
+
+
+<!-- SCORES -->
+
+<div class="history">
+
+<h2>Scores</h2>
+
+<div id="historyList"></div>
+
+</div>
+
+
+<br>
+
+<button id="newGameBtn" class="reset">
+↻ New Game
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   GAME STATE
+========================= */
+
+let playerCount = 0;
+
+let currentPlayer = 1;
+
+let targetTime = null;
+
+let startTime = null;
+
+let elapsed = 0;
+
+let running = false;
+
+let finished = false;
+
+let animationFrame = null;
+
+let audio = null;
+
+let scores = {};
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const setup =
+document.getElementById("setup");
+
+const gameArea =
+document.getElementById("gameArea");
+
+const playerCountInput =
+document.getElementById("playerCountInput");
+
+const startGameBtn =
+document.getElementById("startGameBtn");
+
+const playerTurn =
+document.getElementById("playerTurn");
+
+const target =
+document.getElementById("target");
+
+const timer =
+document.getElementById("timer");
+
+const status =
+document.getElementById("status");
+
+const randomBtn =
+document.getElementById("randomBtn");
+
+const customBtn =
+document.getElementById("customBtn");
+
+const customArea =
+document.getElementById("customArea");
+
+const customInput =
+document.getElementById("customInput");
+
+const setCustomBtn =
+document.getElementById("setCustomBtn");
+
+const startStopBtn =
+document.getElementById("startStopBtn");
+
+const showBtn =
+document.getElementById("showBtn");
+
+const result =
+document.getElementById("result");
+
+const nextArea =
+document.getElementById("nextArea");
+
+const nextBtn =
+document.getElementById("nextBtn");
+
+const winner =
+document.getElementById("winner");
+
+const winnerName =
+document.getElementById("winnerName");
+
+const winnerScore =
+document.getElementById("winnerScore");
+
+const historyList =
+document.getElementById("historyList");
+
+const newGameBtn =
+document.getElementById("newGameBtn");
+
+
+/* =========================
+   LOUD BEEP
+========================= */
+
+function beep(
+  frequency = 800,
+  duration = 180
+) {
+
+  if (!audio) {
+
+    audio = new (
+      window.AudioContext ||
+      window.webkitAudioContext
+    )();
+
+  }
+
+  if (audio.state === "suspended") {
+    audio.resume();
+  }
+
+  const oscillator =
+    audio.createOscillator();
+
+  const gain =
+    audio.createGain();
+
+  oscillator.type = "square";
+
+  oscillator.frequency.value =
+    frequency;
+
+  gain.gain.setValueAtTime(
+    0.001,
+    audio.currentTime
+  );
+
+  gain.gain.exponentialRampToValueAtTime(
+    0.9,
+    audio.currentTime + 0.015
+  );
+
+  gain.gain.exponentialRampToValueAtTime(
+    0.001,
+    audio.currentTime +
+    duration / 1000
+  );
+
+  oscillator.connect(gain);
+  gain.connect(audio.destination);
+
+  oscillator.start();
+
+  oscillator.stop(
+    audio.currentTime +
+    duration / 1000 +
+    0.03
+  );
+}
+
+
+/* =========================
+   FORMAT
+========================= */
+
+function formatTime(seconds) {
+  return seconds.toFixed(2);
+}
+
+
+/* =========================
+   START GAME
+========================= */
+
+startGameBtn.onclick = function() {
+
+  const value =
+    Number(playerCountInput.value);
+
+  if (
+    !Number.isFinite(value) ||
+    value < 1 ||
+    !Number.isInteger(value)
+  ) {
+
+    alert(
+      "Enter a whole number of players."
+    );
+
+    return;
+  }
+
+  playerCount = value;
+
+  currentPlayer = 1;
+
+  scores = {};
+
+  for (
+    let i = 1;
+    i <= playerCount;
+    i++
+  ) {
+
+    scores[i] = null;
+
+  }
+
+  setup.classList.add("hidden");
+
+  gameArea.classList.remove("hidden");
+
+  historyList.innerHTML = "";
+
+  resetRound();
+
+  status.textContent =
+    "Player 1: choose the target.";
+
+  beep(900, 180);
+};
+
+
+/* =========================
+   RESET PLAYER TURN
+========================= */
+
+function resetRound() {
+
+  playerTurn.textContent =
+    "Player " +
+    currentPlayer +
+    "'s Turn";
+
+  timer.textContent =
+    "--:--";
+
+  result.textContent = "";
+
+  result.className =
+    "result";
+
+  startStopBtn.textContent =
+    "▶ Start";
+
+  startStopBtn.classList.remove("stop");
+  startStopBtn.classList.add("start");
+
+  startStopBtn.disabled =
+    targetTime === null;
+
+  showBtn.disabled = true;
+
+  randomBtn.disabled =
+    targetTime !== null;
+
+  customBtn.disabled =
+    targetTime !== null;
+
+  customArea.classList.remove(
+    "showing"
+  );
+
+  customInput.value = "";
+
+  nextArea.classList.add(
+    "hidden"
+  );
+
+  winner.classList.remove(
+    "show"
+  );
+
+  elapsed = 0;
+
+  startTime = null;
+
+  running = false;
+
+  finished = false;
+}
+
+
+/* =========================
+   RANDOM TARGET
+   ONE TARGET FOR EVERYONE
+========================= */
+
+randomBtn.onclick = function() {
+
+  if (targetTime !== null) return;
+
+  targetTime =
+    Math.random() * 14.9 + 0.1;
+
+  targetTime =
+    Math.round(
+      targetTime * 100
+    ) / 100;
+
+  target.textContent =
+    formatTime(targetTime) +
+    "s";
+
+  status.textContent =
+    "Everyone's target is locked!";
+
+  startStopBtn.disabled = false;
+
+  randomBtn.disabled = true;
+
+  customBtn.disabled = true;
+
+  beep(1000, 150);
+};
+
+
+/* =========================
+   CUSTOM TARGET
+========================= */
+
+customBtn.onclick = function() {
+
+  if (targetTime !== null) return;
+
+  customArea.classList.toggle(
+    "showing"
+  );
+
+  if (
+    customArea.classList.contains(
+      "showing"
+    )
+  ) {
+
+    customInput.focus();
+
+  }
+};
+
+
+/* =========================
+   SET SHARED CUSTOM TARGET
+========================= */
+
+setCustomBtn.onclick = function() {
+
+  const value =
+    parseFloat(
+      customInput.value
+    );
+
+  if (
+    !Number.isFinite(value) ||
+    value <= 0
+  ) {
+
+    alert(
+      "Enter a valid target."
+    );
+
+    return;
+  }
+
+  targetTime = value;
+
+  target.textContent =
+    formatTime(targetTime) +
+    "s";
+
+  status.textContent =
+    "Everyone's target is locked!";
+
+  startStopBtn.disabled = false;
+
+  randomBtn.disabled = true;
+
+  customBtn.disabled = true;
+
+  customArea.classList.remove(
+    "showing"
+  );
+
+  beep(1000, 150);
+};
+
+
+/* =========================
+   TIMER LOOP
+========================= */
+
+function updateTimer() {
+
+  if (!running) return;
+
+  elapsed =
+    (
+      performance.now() -
+      startTime
+    ) / 1000;
+
+  animationFrame =
+    requestAnimationFrame(
+      updateTimer
+    );
+}
+
+
+/* =========================
+   START / STOP
+========================= */
+
+startStopBtn.onclick = function() {
+
+  /* START */
+
+  if (
+    !running &&
+    !finished
+  ) {
+
+    startTime =
+      performance.now();
+
+    elapsed = 0;
+
+    running = true;
+
+    timer.textContent =
+      "--:--";
+
+    startStopBtn.textContent =
+      "■ Stop";
+
+    startStopBtn.classList.remove(
+      "start"
+    );
+
+    startStopBtn.classList.add(
+      "stop"
+    );
+
+    status.textContent =
+      "Timer running...";
+
+    beep(900, 200);
+
+    updateTimer();
+
+    return;
+  }
+
+
+  /* STOP */
+
+  if (running) {
+
+    elapsed =
+      (
+        performance.now() -
+        startTime
+      ) / 1000;
+
+    running = false;
+
+    finished = true;
+
+    cancelAnimationFrame(
+      animationFrame
+    );
+
+    startStopBtn.disabled =
+      true;
+
+    showBtn.disabled =
+      false;
+
+    status.textContent =
+      "Stopped! Reveal your time.";
+
+    beep(500, 250);
+  }
+};
+
+
+/* =========================
+   SHOW TIME
+========================= */
+
+showBtn.onclick = function() {
+
+  if (!finished) return;
+
+  timer.textContent =
+    formatTime(elapsed);
+
+  status.textContent =
+    "Actual time:";
+
+  const difference =
+    Math.abs(
+      elapsed -
+      targetTime
+    );
+
+
+  /* RESULT */
+
+  if (difference <= 0.05) {
+
+    result.className =
+      "result good";
+
+    result.textContent =
+      "🎯 PERFECT! " +
+      formatTime(difference) +
+      "s away!";
+
+  }
+
+  else if (difference <= 0.25) {
+
+    result.className =
+      "result close";
+
+    result.textContent =
+      "🔥 Very close! " +
+      formatTime(difference) +
+      "s away.";
+
+  }
+
+  else if (difference <= 1) {
+
+    result.className =
+      "result close";
+
+    result.textContent =
+      "👍 Close! " +
+      formatTime(difference) +
+      "s away.";
+
+  }
+
+  else {
+
+    result.className =
+      "result bad";
+
+    result.textContent =
+      "😅 " +
+      formatTime(difference) +
+      "s away.";
+  }
+
+
+  /* SAVE SCORE */
+
+  scores[currentPlayer] =
+    difference;
+
+  showBtn.disabled = true;
+
+
+  /* BEEP */
+
+  beep(1100, 220);
+
+  setTimeout(function() {
+    beep(1500, 250);
+  }, 180);
+
+
+  /* SCOREBOARD */
+
+  const round =
+    document.createElement("div");
+
+  round.className =
+    "round";
+
+  round.innerHTML =
+
+    "<span>Player " +
+    currentPlayer +
+    "</span>" +
+
+    "<span>" +
+    formatTime(elapsed) +
+    "s</span>" +
+
+    "<span>±" +
+    formatTime(difference) +
+    "s</span>";
+
+  historyList.prepend(round);
+
+
+  /* NEXT PLAYER */
+
+  if (
+    currentPlayer <
+    playerCount
+  ) {
+
+    nextArea.classList.remove(
+      "hidden"
+    );
+
+  }
+
+  else {
+
+    setTimeout(
+      showWinner,
+      500
+    );
+
+  }
+};
+
+
+/* =========================
+   NEXT PLAYER
+========================= */
+
+nextBtn.onclick = function() {
+
+  currentPlayer++;
+
+  resetRound();
+
+  status.textContent =
+    "Same target: " +
+    formatTime(targetTime) +
+    "s";
+
+  beep(900, 180);
+};
+
+
+/* =========================
+   WINNER
+========================= */
+
+function showWinner() {
+
+  let bestScore =
+    Infinity;
+
+  let winners = [];
+
+
+  for (
+    let i = 1;
+    i <= playerCount;
+    i++
+  ) {
+
+    if (
+      scores[i] !== null
+    ) {
+
+      if (
+        scores[i] <
+        bestScore
+      ) {
+
+        bestScore =
+          scores[i];
+
+        winners = [i];
+
+      }
+
+      else if (
+        scores[i] ===
+        bestScore
+      ) {
+
+        winners.push(i);
+
+      }
+    }
+  }
+
+
+  winner.classList.add(
+    "show"
+  );
+
+
+  if (
+    winners.length > 1
+  ) {
+
+    winnerName.textContent =
+      winners
+        .map(
+          p => "Player " + p
+        )
+        .join(" & ");
+
+    winnerScore.textContent =
+      "🏆 It's a tie!";
+
+  }
+
+  else {
+
+    winnerName.textContent =
+      "Player " +
+      winners[0];
+
+    winnerScore.textContent =
+      "Closest to " +
+      formatTime(targetTime) +
+      "s — only " +
+      formatTime(bestScore) +
+      "s away!";
+
+  }
+
+
+  /* WINNER BEEP */
+
+  beep(1200, 180);
+
+  setTimeout(function() {
+    beep(1500, 180);
+  }, 180);
+
+  setTimeout(function() {
+    beep(1800, 300);
+  }, 360);
+}
+
+
+/* =========================
+   NEW GAME
+========================= */
+
+newGameBtn.onclick = function() {
+
+  cancelAnimationFrame(
+    animationFrame
+  );
+
+  playerCount = 0;
+
+  currentPlayer = 1;
+
+  targetTime = null;
+
+  elapsed = 0;
+
+  running = false;
+
+  finished = false;
+
+  scores = {};
+
+  playerCountInput.value = "";
+
+  historyList.innerHTML = "";
+
+  gameArea.classList.add(
+    "hidden"
+  );
+
+  setup.classList.remove(
+    "hidden"
+  );
+
+  beep(700, 150);
+};
+
+</script>
+
+</body>
+</html>
+```
