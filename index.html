@@ -1721,8 +1721,196 @@ function showWinner() {
   );
 
 }
+
+/* =========================
+   NEW GAME
+========================= */
+
+newGameBtn.onclick = function() {
+
+  cancelAnimationFrame(
+    animationFrame
+  );
+
+
+  /* RESET GAME STATE */
+
+  playerCount = 0;
+
+  playerNames = [];
+
+  currentPlayer = 1;
+
+  targetTime = null;
+
+  startTime = null;
+
+  elapsed = 0;
+
+  running = false;
+
+  finished = false;
+
+  animationFrame = null;
+
+  scores = {};
+
+
+  /* RESET INPUTS */
+
+  playerCountInput.value = "";
+
+  nameInputs.innerHTML = "";
+
+  customInput.value = "";
+
+
+  /* RESET SCREENS */
+
+  gameArea.classList.add(
+    "hidden"
+  );
+
+  nameSetup.classList.add(
+    "hidden"
+  );
+
+  continuePlayersBtn.classList.remove(
+    "hidden"
+  );
+
+  playerCountInput.classList.remove(
+    "hidden"
+  );
+
+
+  /* RESET GAME DISPLAY */
+
+  target.textContent =
+    "--.--";
+
+  timer.textContent =
+    "--:--";
+
+  result.textContent = "";
+
+  historyList.innerHTML = "";
+
+
+  winner.classList.add(
+    "hidden"
+  );
+
+
+  /* GO BACK TO SETUP */
+
+  setup.classList.remove(
+    "hidden"
+  );
+
+
+  status.textContent =
+    "Choose the target.";
+
+
+  beep(700, 150);
+
+};
+
+
+/* =========================
+   PREVENT NEGATIVE / WEIRD
+   PLAYER COUNTS
+========================= */
+
+playerCountInput.addEventListener(
+  "input",
+  function() {
+
+    if (
+      Number(this.value) < 1
+    ) {
+
+      this.value = "";
+
+    }
+
+  }
+);
+
+
+/* =========================
+   ENTER KEY SUPPORT
+========================= */
+
+playerCountInput.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (
+      event.key === "Enter"
+    ) {
+
+      continuePlayersBtn.click();
+
+    }
+
+  }
+);
+
+
+/* =========================
+   ENTER KEY FOR CUSTOM TARGET
+========================= */
+
+customInput.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (
+      event.key === "Enter"
+    ) {
+
+      setCustomBtn.click();
+
+    }
+
+  }
+);
+
+
+/* =========================
+   AUDIO UNLOCK FOR IOS
+========================= */
+
+document.addEventListener(
+  "touchstart",
+  function() {
+
+    if (!audio) {
+
+      audio = new (
+        window.AudioContext ||
+        window.webkitAudioContext
+      )();
+
+    }
+
+    if (
+      audio.state === "suspended"
+    ) {
+
+      audio.resume();
+
+    }
+
+  },
+  { once:true }
+);
+
 </script>
 
 </body>
 </html>
+  
 ```
