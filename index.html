@@ -19,20 +19,23 @@
 
 <style>
 
+/* ==================================================
+   TIME TARGET — CLEAN UI
+   PART 1
+================================================== */
+
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
+html {
+  background: #07090d;
   min-height: 100%;
 }
 
 body {
+  margin: 0;
   min-height: 100vh;
   min-height: 100dvh;
 
@@ -40,84 +43,89 @@ body {
   justify-content: center;
   align-items: center;
 
-  background: #0b0d10;
+  padding: 18px;
+
+  background:
+    radial-gradient(
+      circle at 50% -15%,
+      #172b40 0%,
+      #0c131c 38%,
+      #07090d 75%
+    );
+
   color: #f5f7fa;
 
   font-family:
     -apple-system,
     BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    "Inter",
     "Segoe UI",
     Arial,
     sans-serif;
 
-  padding: 18px;
+  overflow-x: hidden;
 }
 
 
 /* =========================
-   MAIN CARD
+   MAIN APP
 ========================= */
 
-.card {
+.game {
   width: 100%;
-  max-width: 560px;
+  max-width: 680px;
+  margin: 0 auto;
 
-  margin: auto;
+  padding: 34px;
 
-  background: #171a1f;
+  background:
+    linear-gradient(
+      180deg,
+      #171c23,
+      #11161c
+    );
 
-  border: 1px solid #30363d;
-
-  border-radius: 36px;
-
-  padding: 30px 22px;
-
-  text-align: center;
+  border: 1px solid #2b333d;
+  border-radius: 34px;
 
   box-shadow:
-    0 20px 50px rgba(0, 0, 0, .55);
+    0 30px 90px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,255,255,.035);
+
+  text-align: center;
+  position: relative;
 }
 
 
 /* =========================
-   HEADINGS
+   TYPOGRAPHY
 ========================= */
 
 h1 {
-  margin: 0 0 10px;
+  margin: 0;
 
-  font-size: clamp(30px, 8vw, 40px);
+  font-size: clamp(34px, 8vw, 48px);
+  line-height: 1;
 
+  letter-spacing: -1.8px;
   font-weight: 800;
-
-  letter-spacing: -1px;
 }
 
 h2 {
-  margin: 15px 0;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
-
-h3 {
-  margin: 20px 0 5px;
-
-  color: #aeb7c4;
-
-  font-size: 13px;
-
-  letter-spacing: 1.5px;
-}
-
-
-/* =========================
-   SUBTITLE
-========================= */
 
 .subtitle {
-  color: #9da6b2;
+  color: #8e99a7;
+
+  margin: 14px auto 30px;
+  max-width: 430px;
 
   line-height: 1.5;
-
-  margin-bottom: 25px;
+  font-size: 15px;
 }
 
 
@@ -127,39 +135,42 @@ h3 {
 
 input {
   width: 100%;
+  min-height: 56px;
 
-  padding: 17px 20px;
+  padding: 0 18px;
+  margin-bottom: 12px;
 
-  margin: 7px 0;
+  border-radius: 17px;
+  border: 1px solid #303943;
 
-  border-radius: 50px;
-
-  border: 1px solid #3a424d;
-
-  outline: none;
-
-  background: #0d0f12;
-
-  color: #ffffff;
-
-  text-align: center;
+  background: #0b1015;
+  color: #f5f7fa;
 
   font-size: 17px;
+  font-weight: 550;
+
+  text-align: center;
+  outline: none;
+
+  font-family: inherit;
 
   transition:
-    border-color .2s,
-    box-shadow .2s;
-}
-
-input:focus {
-  border-color: #5faeff;
-
-  box-shadow:
-    0 0 0 3px rgba(95, 174, 255, .15);
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background .18s ease;
 }
 
 input::placeholder {
-  color: #69727e;
+  color: #66717e;
+}
+
+input:focus {
+  border-color: #4e8fbe;
+
+  background: #0d141b;
+
+  box-shadow:
+    0 0 0 4px rgba(78,143,190,.12);
 }
 
 
@@ -168,134 +179,85 @@ input::placeholder {
 ========================= */
 
 button {
-  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 17px;
 
   min-height: 56px;
+  padding: 14px 18px;
 
-  margin: 7px 0;
+  font-family: inherit;
 
-  padding: 15px 18px;
-
-  border: 1px solid #3b4652;
-
-  border-radius: 50px;
-
-  background: #252b33;
-
-  color: #ffffff;
-
-  font-size: 16px;
-
+  font-size: 15px;
   font-weight: 700;
+  letter-spacing: -.15px;
+
+  color: #f5f7fa;
+  background: #202832;
 
   cursor: pointer;
 
   transition:
-    transform .12s,
-    background .2s,
-    border-color .2s;
+    transform .14s ease,
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    opacity .18s ease;
+}
+
+button:hover:not(:disabled) {
+  border-color: #3b4753;
+
+  box-shadow:
+    0 8px 24px rgba(0,0,0,.2);
 }
 
 button:active:not(:disabled) {
-  transform: scale(.96);
+  transform: scale(.975);
 }
 
 button:disabled {
-  opacity: .35;
-
+  opacity: .3;
   cursor: not-allowed;
 }
 
 
 /* =========================
-   BLUE BUTTONS
+   SETUP
 ========================= */
 
-#continuePlayersBtn,
-#startGameBtn,
-.next {
-  background: #256da8;
-
-  border-color: #418dcc;
+#setup {
+  width: 100%;
 }
 
-#continuePlayersBtn:hover,
-#startGameBtn:hover,
-.next:hover {
-  background: #2d7fc1;
+.setup h2 {
+  margin-top: 28px;
 }
 
 
 /* =========================
-   TARGET BUTTONS
-========================= */
-
-.random {
-  background: #1f6092;
-
-  border-color: #3d8ac0;
-}
-
-.custom {
-  background: #444a52;
-
-  border-color: #626b76;
-}
-
-
-/* =========================
-   START / STOP
-========================= */
-
-.start {
-  background: #176b4b;
-
-  border-color: #2b9b70;
-}
-
-.stop {
-  background: #963c48;
-
-  border-color: #c55b68;
-}
-
-
-/* =========================
-   SHOW BUTTON
-========================= */
-
-.show {
-  background: #3f6387;
-
-  border-color: #628eb8;
-}
-
-
-/* =========================
-   RESET
-========================= */
-
-.reset {
-  background: #20252b;
-
-  border-color: #3b424b;
-
-  color: #cbd2da;
-}
-
-
-/* =========================
-   PLAYER TURN
+   PLAYER
 ========================= */
 
 .player-turn {
-  margin: 22px 0;
+  display: inline-flex;
 
-  font-size: clamp(25px, 7vw, 32px);
+  align-items: center;
+  justify-content: center;
 
-  font-weight: 800;
+  min-height: 42px;
+  padding: 0 18px;
 
-  color: #70b9f7;
+  margin: 16px 0 24px;
+
+  border-radius: 999px;
+
+  background: #152537;
+  border: 1px solid #294761;
+
+  color: #72b9ed;
+
+  font-size: 17px;
+  font-weight: 750;
 }
 
 
@@ -303,111 +265,85 @@ button:disabled {
    TARGET
 ========================= */
 
-.target-box {
-  background: #20252b;
-
-  border: 1px solid #353d46;
-
-  border-radius: 28px;
-
-  padding: 18px;
-
-  margin-top: 15px;
+.target-area {
+  margin-bottom: 20px;
 }
 
 .target-label {
-  color: #89939f;
+  color: #778391;
 
-  font-size: 12px;
-
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 750;
 
   letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
 .target {
-  margin-top: 5px;
+  margin-top: 7px;
 
-  color: #ffffff;
-
-  font-size: 36px;
+  font-size: clamp(28px, 7vw, 38px);
 
   font-weight: 800;
+  letter-spacing: -1px;
+
+  color: #f5f7fa;
 }
 
 
 /* =========================
-   STOPWATCH
+   TIMER
 ========================= */
 
 .timer-box {
   width: 100%;
-
-  height: 145px;
+  height: 170px;
 
   margin: 24px 0;
 
-  background: #000000;
+  border-radius: 26px;
 
-  border: 2px solid #22272d;
+  background:
+    radial-gradient(
+      circle at center,
+      #101820,
+      #080b0f 72%
+    );
 
-  border-radius: 34px;
+  border: 1px solid #252e38;
 
   display: flex;
-
   justify-content: center;
-
   align-items: center;
 
   overflow: hidden;
 
-  position: relative;
-}
-
-
-/*
-   Keeps anything else from
-   visually appearing behind
-   the stopwatch.
-*/
-
-.timer-box * {
-  background: transparent !important;
-
-  text-shadow: none !important;
+  box-shadow:
+    inset 0 0 35px rgba(0,0,0,.35);
 }
 
 .timer {
   position: relative;
 
-  z-index: 2;
-
-  margin: 0;
-
-  padding: 0;
-
-  color: #ffffff;
-
-  font-family: ui-monospace,
+  font-family:
+    ui-monospace,
     SFMono-Regular,
     Menlo,
     Monaco,
     Consolas,
     monospace;
 
-  font-size:
-    clamp(52px, 16vw, 88px);
+  font-size: clamp(52px, 16vw, 88px);
 
-  font-weight: 800;
-
+  font-weight: 700;
   line-height: 1;
 
-  letter-spacing: 2px;
+  letter-spacing: -3px;
 
-  background: transparent;
+  color: #f5f7fa;
 
   text-shadow:
-    0 0 18px rgba(255,255,255,.08);
+    0 0 25px rgba(255,255,255,.05);
 }
 
 
@@ -418,43 +354,133 @@ button:disabled {
 .status {
   min-height: 25px;
 
-  margin: 12px 0 18px;
+  margin-bottom: 18px;
 
-  color: #aeb7c2;
+  color: #8e99a7;
 
-  font-size: 15px;
+  font-size: 14px;
 }
 
 
 /* =========================
-   TWO BUTTON LAYOUT
+   BUTTON GRID
 ========================= */
 
 .buttons {
-  width: 100%;
-
   display: grid;
 
   grid-template-columns: 1fr 1fr;
 
-  gap: 10px;
+  gap: 11px;
 }
 
 
 /* =========================
-   CUSTOM TARGET BOX
+   BUTTON COLOURS
 ========================= */
 
-.name-box {
-  margin-top: 15px;
+.start {
+  background: #173c2c;
+  border-color: #285b45;
+  color: #83e0b1;
+}
 
-  padding: 18px;
+.start:hover:not(:disabled) {
+  background: #1b4935;
+}
 
-  background: #111419;
+.stop {
+  background: #3e1e25;
+  border-color: #61313b;
+  color: #ff8797;
+}
 
-  border: 1px solid #303740;
+.stop:hover:not(:disabled) {
+  background: #4a222b;
+}
 
-  border-radius: 28px;
+.show {
+  background: #25223d;
+  border-color: #413b68;
+  color: #b7adff;
+}
+
+.show:hover:not(:disabled) {
+  background: #2c2848;
+}
+
+.random {
+  background: #162f44;
+  border-color: #294d69;
+  color: #79bcef;
+}
+
+.random:hover:not(:disabled) {
+  background: #1b3a54;
+}
+
+.custom {
+  background: #29251c;
+  border-color: #51472e;
+  color: #e3c77e;
+}
+
+.custom:hover:not(:disabled) {
+  background: #342e21;
+}
+
+.reset {
+  width: 100%;
+
+  background: #181e25;
+
+  border-color: #2c353f;
+
+  color: #929daa;
+}
+
+.next {
+  width: 100%;
+
+  margin-top: 12px;
+
+  background: #162f44;
+
+  border-color: #294d69;
+
+  color: #79bcef;
+}
+
+
+/* =========================
+   CUSTOM TARGET
+========================= */
+
+.custom-area {
+  display: none;
+
+  margin-top: 14px;
+  padding: 16px;
+
+  background: #0e1319;
+
+  border: 1px solid #252e37;
+
+  border-radius: 20px;
+}
+
+.custom-area.showing {
+  display: block;
+}
+
+.custom-area button {
+  width: 100%;
+
+  background: #29251c;
+
+  border-color: #51472e;
+
+  color: #e3c77e;
 }
 
 
@@ -463,15 +489,26 @@ button:disabled {
 ========================= */
 
 .result {
+  margin-top: 25px;
+
   min-height: 35px;
 
-  margin: 20px 0;
+  font-size: 20px;
+  font-weight: 750;
 
-  color: #ffffff;
+  letter-spacing: -.3px;
+}
 
-  font-size: 21px;
+.good {
+  color: #75e5ae;
+}
 
-  font-weight: 800;
+.close {
+  color: #e3c766;
+}
+
+.bad {
+  color: #ff7180;
 }
 
 
@@ -480,120 +517,89 @@ button:disabled {
 ========================= */
 
 .winner {
+  display: none;
+
   margin-top: 25px;
+  padding: 28px 18px;
 
-  padding: 25px 15px;
+  border-radius: 24px;
 
-  background: #111419;
+  background: #10161d;
 
-  border: 1px solid #343b44;
+  border: 1px solid #2b343e;
+}
 
-  border-radius: 30px;
+.winner.show {
+  display: block;
+}
+
+.winner-title {
+  color: #7f8b98;
+
+  font-size: 12px;
+  font-weight: 750;
+
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
 .winner-name {
   margin: 10px 0;
 
-  color: #70b9f7;
+  font-size: clamp(34px, 9vw, 48px);
 
-  font-size: clamp(32px, 10vw, 46px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
 
-  font-weight: 900;
-
-  word-break: break-word;
+  color: #e8c96c;
 }
 
-
-/* =========================
-   SCORES
-========================= */
-
-#history {
-  margin-top: 30px;
-
-  padding-top: 20px;
-
-  border-top: 1px solid #2b3036;
-}
-
-#history h2 {
-  color: #aeb7c2;
-
-  font-size: 18px;
-}
-
-.round {
-  display: flex;
-
-  justify-content: space-between;
-
-  align-items: center;
-
-  gap: 8px;
-
-  padding: 13px 15px;
-
-  margin: 8px 0;
-
-  background: #111419;
-
-  border: 1px solid #2b323a;
-
-  border-radius: 22px;
-
-  color: #e7ebef;
-
+.winner-score {
+  color: #8e99a7;
   font-size: 14px;
 }
 
 
 /* =========================
-   LOADING SCREEN
+   HISTORY
 ========================= */
 
-#loading {
-  position: fixed;
+.history {
+  margin-top: 30px;
+  padding-top: 22px;
 
-  inset: 0;
+  border-top: 1px solid #242c34;
 
-  z-index: 9999;
+  text-align: left;
+}
 
+.history h2 {
+  margin: 0 0 14px;
+
+  color: #8d98a5;
+
+  font-size: 13px;
+  font-weight: 750;
+
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+
+.round {
   display: flex;
 
-  flex-direction: column;
-
-  justify-content: center;
-
   align-items: center;
+  justify-content: space-between;
 
-  background: #0b0d10;
+  gap: 10px;
 
-  color: #ffffff;
-}
+  padding: 14px 0;
 
-#loading h1 {
-  margin-bottom: 25px;
-}
+  border-bottom: 1px solid #1e252d;
 
-.loader {
-  width: 65px;
+  color: #c9d0d8;
 
-  height: 65px;
-
-  border-radius: 50%;
-
-  border: 7px solid #30363d;
-
-  border-top-color: #70b9f7;
-
-  animation:
-    spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  font-size: 13px;
 }
 
 
@@ -610,109 +616,75 @@ button:disabled {
    MOBILE
 ========================= */
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
 
   body {
-    padding: 10px;
-
-    align-items: center;
+    padding: 12px;
   }
 
-  .card {
-    padding: 25px 16px;
+  .game {
+    padding: 26px 18px;
+    border-radius: 28px;
+  }
 
-    border-radius: 30px;
+  .timer-box {
+    height: 150px;
+    border-radius: 23px;
   }
 
   .buttons {
-    gap: 8px;
+    gap: 9px;
   }
 
   button {
-    font-size: 15px;
-  }
+    min-height: 54px;
 
-  .timer-box {
-    height: 125px;
+    border-radius: 16px;
 
-    border-radius: 30px;
+    padding: 13px 9px;
+
+    font-size: 14px;
   }
 
 }
 
 
 /* =========================
-   VERY SMALL PHONES
+   SMALL PHONES
 ========================= */
 
-@media (max-width: 360px) {
+@media (max-width: 380px) {
 
-  .card {
-    padding: 22px 12px;
+  body {
+    padding: 8px;
   }
 
-  .buttons {
-    grid-template-columns: 1fr;
+  .game {
+    padding: 23px 14px;
+    border-radius: 25px;
   }
 
   .timer-box {
-    height: 115px;
+    height: 135px;
   }
 
 }
 
+
 /* =========================
-   MUSIC BUTTON
+   SAFE AREA
 ========================= */
 
-.music-button {
-  position: fixed;
+@supports (padding: env(safe-area-inset-top)) {
 
-  top: 18px;
-  right: 18px;
+  body {
 
-  z-index: 1000;
+    padding-top:
+      max(12px, env(safe-area-inset-top));
 
-  width: auto;
-  min-width: 125px;
+    padding-bottom:
+      max(12px, env(safe-area-inset-bottom));
 
-  min-height: 44px;
-
-  margin: 0;
-
-  padding: 10px 16px;
-
-  background: #171a1f;
-
-  border: 1px solid #3b4652;
-
-  border-radius: 50px;
-
-  color: #ffffff;
-
-  font-size: 13px;
-
-  font-weight: 700;
-
-  box-shadow:
-    0 8px 25px rgba(0, 0, 0, .35);
-}
-
-.music-button.on {
-  background: #256da8;
-
-  border-color: #5faeff;
-}
-
-@media (max-width: 500px) {
-
-  .music-button {
-    top: 12px;
-    right: 12px;
-
-    min-width: 110px;
-
-    font-size: 12px;
   }
 
 }
