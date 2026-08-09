@@ -410,188 +410,260 @@ button:disabled {
 </style>
 </head>
 
+</head>
+
 <body>
 
-<div class="game">
-
-<h1>⏱️ Time Target</h1>
-
-<div class="subtitle">
-Everyone gets the same target. Closest player wins.
-</div>
-
-
 <!-- =========================
-     SETUP
+     LOADING SCREEN
 ========================= -->
 
-<div id="setup">
+<div id="loading">
 
-<h2>How many players?</h2>
+  <h1>⏱️ Time Target</h1>
 
-<input
-  id="playerCountInput"
-  type="number"
-  min="1"
-  step="1"
-  inputmode="numeric"
-  placeholder="Enter number of players"
->
+  <div class="loader"></div>
 
-<button id="startGameBtn">
-👥 Start Game
-</button>
+  <p>Getting everything ready...</p>
 
 </div>
 
 
 <!-- =========================
-     GAME
+     MAIN APP
 ========================= -->
 
-<div id="gameArea" class="hidden">
+<div id="app" class="card hidden">
 
-<div id="playerTurn" class="player-turn">
-Player 1's Turn
-</div>
+  <h1>⏱️ Time Target</h1>
 
-
-<!-- ONE SHARED TARGET -->
-
-<div class="target-area">
-
-<div class="target-label">
-EVERYONE'S TARGET
-</div>
-
-<div id="target" class="target">
---.--
-</div>
-
-</div>
+  <div class="subtitle">
+    Everyone gets the same target.<br>
+    Closest player wins.
+  </div>
 
 
-<!-- TIMER -->
+  <!-- =========================
+       PLAYER SETUP
+  ========================= -->
 
-<div class="timer-box">
+  <div id="setup">
 
-<div id="timer" class="timer">
---:--
-</div>
+    <h2>👥 How many players?</h2>
 
-</div>
+    <input
+      id="playerCountInput"
+      type="number"
+      min="1"
+      step="1"
+      inputmode="numeric"
+      placeholder="Enter number of players"
+    >
 
-
-<div id="status" class="status">
-Choose the target.
-</div>
-
-
-<!-- TARGET BUTTONS -->
-
-<div class="buttons">
-
-<button id="randomBtn" class="random">
-🎲 Random Target
-</button>
-
-<button id="customBtn" class="custom">
-🎯 Custom Target
-</button>
-
-</div>
+    <button id="continuePlayersBtn">
+      Continue →
+    </button>
 
 
-<!-- CUSTOM TARGET -->
+    <!-- NAME SETUP -->
 
-<div id="customArea" class="custom-area">
+    <div id="nameSetup" class="name-box hidden">
 
-<input
-  id="customInput"
-  type="number"
-  min="0.01"
-  step="0.01"
-  inputmode="decimal"
-  placeholder="Target in seconds"
->
+      <h2>✏️ Player Names</h2>
 
-<button id="setCustomBtn">
-Set Target For Everyone
-</button>
+      <p class="subtitle">
+        Give everyone a name
+      </p>
 
-</div>
+      <div id="nameInputs"></div>
+
+      <button id="startGameBtn">
+        🚀 Start Game
+      </button>
+
+    </div>
+
+  </div>
 
 
-<!-- START / STOP / SHOW -->
+  <!-- =========================
+       GAME AREA
+  ========================= -->
 
-<div class="buttons" style="margin-top:10px;">
+  <div id="gameArea" class="hidden">
 
-<button id="startStopBtn"
+    <div id="playerTurn" class="player-turn">
+      Player 1's Turn
+    </div>
+
+
+    <!-- SHARED TARGET -->
+
+    <div class="target-box">
+
+      <div class="target-label">
+        EVERYONE'S TARGET
+      </div>
+
+      <div id="target" class="target">
+        --.--
+      </div>
+
+    </div>
+
+
+    <!-- TIMER -->
+
+    <div class="timer-box">
+
+      <div id="timer" class="timer">
+        --:--
+      </div>
+
+    </div>
+
+
+    <div id="status" class="status">
+      Choose the target.
+    </div>
+
+
+    <!-- TARGET BUTTONS -->
+
+    <div class="buttons">
+
+      <button
+        id="randomBtn"
+        class="random"
+      >
+        🎲 Random Target
+      </button>
+
+      <button
+        id="customBtn"
+        class="custom"
+      >
+        🎯 Custom Target
+      </button>
+
+    </div>
+
+
+    <!-- CUSTOM TARGET -->
+
+    <div
+      id="customArea"
+      class="name-box hidden"
+    >
+
+      <input
+        id="customInput"
+        type="number"
+        min="0.01"
+        step="0.01"
+        inputmode="decimal"
+        placeholder="Target in seconds"
+      >
+
+      <button id="setCustomBtn">
+        Set Target For Everyone
+      </button>
+
+    </div>
+
+
+    <!-- START / STOP / SHOW -->
+
+    <div
+      class="buttons"
+      style="margin-top:10px;"
+    >
+
+      <button
+        id="startStopBtn"
         class="start"
-        disabled>
-▶ Start
-</button>
+        disabled
+      >
+        ▶ Start
+      </button>
 
-<button id="showBtn"
+      <button
+        id="showBtn"
         class="show"
-        disabled>
-👁 Show Time
-</button>
+        disabled
+      >
+        👁 Show Time
+      </button>
 
-</div>
-
-
-<!-- RESULT -->
-
-<div id="result" class="result"></div>
+    </div>
 
 
-<!-- NEXT -->
+    <!-- RESULT -->
 
-<div id="nextArea" class="hidden">
-
-<button id="nextBtn" class="next">
-➡️ Next Player
-</button>
-
-</div>
+    <div
+      id="result"
+      class="result"
+    ></div>
 
 
-<!-- WINNER -->
+    <!-- NEXT PLAYER -->
 
-<div id="winner" class="winner">
+    <div id="nextArea" class="hidden">
 
-<div class="winner-title">
-🏆 WINNER
-</div>
+      <button id="nextBtn">
+        ➡️ Next Player
+      </button>
 
-<div id="winnerName" class="winner-name">
-Player 1
-</div>
-
-<div id="winnerScore" class="winner-score"></div>
-
-</div>
+    </div>
 
 
-<!-- SCORES -->
+    <!-- WINNER -->
 
-<div class="history">
+    <div
+      id="winner"
+      class="winner hidden"
+    >
 
-<h2>Scores</h2>
+      <div>
+        🏆 WINNER
+      </div>
 
-<div id="historyList"></div>
+      <div
+        id="winnerName"
+        class="winner-name"
+      >
+        Player 1
+      </div>
 
-</div>
+      <div id="winnerScore"></div>
+
+    </div>
 
 
-<br>
+    <!-- SCORES -->
 
-<button id="newGameBtn" class="reset">
-↻ New Game
-</button>
+    <div
+      id="history"
+      style="margin-top:30px;"
+    >
 
-</div>
+      <h2>📊 Scores</h2>
+
+      <div id="historyList"></div>
+
+    </div>
+
+
+    <!-- NEW GAME -->
+
+    <button
+      id="newGameBtn"
+      class="reset"
+    >
+      ↻ New Game
+    </button>
+
+  </div>
 
 </div>
 
