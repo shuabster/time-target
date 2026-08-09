@@ -7,7 +7,7 @@
   "theme_color": "#0b0d14",
   "icons": [
     {
-      "src": "jeff.png",
+      "src": "/time-target/jeff.png",
       "sizes": "512x512",
       "type": "image/png"
     }
