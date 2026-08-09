@@ -1664,16 +1664,26 @@ confirmPlayersBtn.onclick = function() {
 };
 
 
+backToCountBtn.onclick = function() {
+
+  nameSetup.classList.add("hidden");
+
+  setup.classList.remove("hidden");
+
+  playerNameInputs.innerHTML = "";
+
+  beep(600, 120);
+};
+
+
 /* =========================
    RESET ROUND
 ========================= */
 
 function resetRound() {
 
-  playerTurn.textContent =
-    playerNames[
-      currentPlayer - 1
-    ] +
+playerTurn.textContent =
+    playerNames[currentPlayer] +
     "'s Turn";
 
 
