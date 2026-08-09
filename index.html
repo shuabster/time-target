@@ -675,17 +675,15 @@ button:disabled {
 ========================= */
 
 let playerCount = 0;
-
+let playerNames = [];
 let currentPlayer = 1;
 
 let targetTime = null;
 
 let startTime = null;
-
 let elapsed = 0;
 
 let running = false;
-
 let finished = false;
 
 let animationFrame = null;
@@ -699,6 +697,12 @@ let scores = {};
    ELEMENTS
 ========================= */
 
+const loading =
+document.getElementById("loading");
+
+const app =
+document.getElementById("app");
+
 const setup =
 document.getElementById("setup");
 
@@ -707,6 +711,15 @@ document.getElementById("gameArea");
 
 const playerCountInput =
 document.getElementById("playerCountInput");
+
+const continuePlayersBtn =
+document.getElementById("continuePlayersBtn");
+
+const nameSetup =
+document.getElementById("nameSetup");
+
+const nameInputs =
+document.getElementById("nameInputs");
 
 const startGameBtn =
 document.getElementById("startGameBtn");
@@ -770,6 +783,23 @@ document.getElementById("newGameBtn");
 
 
 /* =========================
+   LOADING SCREEN
+========================= */
+
+window.addEventListener("load", function() {
+
+  setTimeout(function() {
+
+    loading.classList.add("hidden");
+
+    app.classList.remove("hidden");
+
+  }, 1500);
+
+});
+
+
+/* =========================
    LOUD BEEP
 ========================= */
 
@@ -788,7 +818,9 @@ function beep(
   }
 
   if (audio.state === "suspended") {
+
     audio.resume();
+
   }
 
   const oscillator =
@@ -819,6 +851,7 @@ function beep(
   );
 
   oscillator.connect(gain);
+
   gain.connect(audio.destination);
 
   oscillator.start();
@@ -828,26 +861,33 @@ function beep(
     duration / 1000 +
     0.03
   );
+
 }
 
 
 /* =========================
-   FORMAT
+   FORMAT TIME
 ========================= */
 
 function formatTime(seconds) {
+
   return seconds.toFixed(2);
+
 }
 
 
 /* =========================
-   START GAME
+   CHOOSE PLAYER COUNT
 ========================= */
 
-startGameBtn.onclick = function() {
+continuePlayersBtn.onclick =
+function() {
 
   const value =
-    Number(playerCountInput.value);
+    Number(
+      playerCountInput.value
+    );
+
 
   if (
     !Number.isFinite(value) ||
@@ -860,13 +900,115 @@ startGameBtn.onclick = function() {
     );
 
     return;
+
   }
+
 
   playerCount = value;
 
-  currentPlayer = 1;
+
+  /*
+     CREATE NAME INPUTS
+  */
+
+  nameInputs.innerHTML = "";
+
+
+  for (
+    let i = 1;
+    i <= playerCount;
+    i++
+  ) {
+
+    const input =
+      document.createElement("input");
+
+    input.type = "text";
+
+    input.className =
+      "player-name-input";
+
+    input.placeholder =
+      "Player " + i;
+
+    input.value =
+      "Player " + i;
+
+    input.maxLength = 30;
+
+    nameInputs.appendChild(input);
+
+  }
+
+
+  nameSetup.classList.remove(
+    "hidden"
+  );
+
+
+  continuePlayersBtn.classList.add(
+    "hidden"
+  );
+
+
+  playerCountInput.classList.add(
+    "hidden"
+  );
+
+
+  beep(900, 180);
+
+};
+
+
+/* =========================
+   START GAME
+========================= */
+
+startGameBtn.onclick =
+function() {
+
+  const inputs =
+    document.querySelectorAll(
+      ".player-name-input"
+    );
+
+
+  playerNames = [];
+
+
+  inputs.forEach(
+    function(input, index) {
+
+      const name =
+        input.value.trim();
+
+
+      if (name.length > 0) {
+
+        playerNames.push(name);
+
+      }
+
+      else {
+
+        playerNames.push(
+          "Player " +
+          (index + 1)
+        );
+
+      }
+
+    }
+  );
+
+
+  /*
+     CREATE SCORE LIST
+  */
 
   scores = {};
+
 
   for (
     let i = 1;
@@ -878,70 +1020,110 @@ startGameBtn.onclick = function() {
 
   }
 
-  setup.classList.add("hidden");
 
-  gameArea.classList.remove("hidden");
+  currentPlayer = 1;
+
+  targetTime = null;
+
+  setup.classList.add(
+    "hidden"
+  );
+
+  gameArea.classList.remove(
+    "hidden"
+  );
+
 
   historyList.innerHTML = "";
 
+  target.textContent =
+    "--.--";
+
+  timer.textContent =
+    "--:--";
+
+
   resetRound();
 
-  status.textContent =
-    "Player 1: choose the target.";
 
-  beep(900, 180);
+  status.textContent =
+    playerNames[0] +
+    ": choose the target.";
+
+
+  beep(1000, 200);
+
 };
 
 
 /* =========================
-   RESET PLAYER TURN
+   RESET ROUND
 ========================= */
 
 function resetRound() {
 
   playerTurn.textContent =
-    "Player " +
-    currentPlayer +
+    playerNames[
+      currentPlayer - 1
+    ] +
     "'s Turn";
+
 
   timer.textContent =
     "--:--";
+
 
   result.textContent = "";
 
   result.className =
     "result";
 
+
   startStopBtn.textContent =
     "▶ Start";
 
-  startStopBtn.classList.remove("stop");
-  startStopBtn.classList.add("start");
+
+  startStopBtn.classList.remove(
+    "stop"
+  );
+
+  startStopBtn.classList.add(
+    "start"
+  );
+
 
   startStopBtn.disabled =
     targetTime === null;
 
+
   showBtn.disabled = true;
+
 
   randomBtn.disabled =
     targetTime !== null;
 
+
   customBtn.disabled =
     targetTime !== null;
 
-  customArea.classList.remove(
-    "showing"
+
+  customArea.classList.add(
+    "hidden"
   );
 
+
   customInput.value = "";
+
 
   nextArea.classList.add(
     "hidden"
   );
 
-  winner.classList.remove(
-    "show"
+
+  winner.classList.add(
+    "hidden"
   );
+
 
   elapsed = 0;
 
@@ -950,503 +1132,10 @@ function resetRound() {
   running = false;
 
   finished = false;
+
 }
 
-
-/* =========================
-   RANDOM TARGET
-   ONE TARGET FOR EVERYONE
-========================= */
-
-randomBtn.onclick = function() {
-
-  if (targetTime !== null) return;
-
-  targetTime =
-    Math.random() * 14.9 + 0.1;
-
-  targetTime =
-    Math.round(
-      targetTime * 100
-    ) / 100;
-
-  target.textContent =
-    formatTime(targetTime) +
-    "s";
-
-  status.textContent =
-    "Everyone's target is locked!";
-
-  startStopBtn.disabled = false;
-
-  randomBtn.disabled = true;
-
-  customBtn.disabled = true;
-
-  beep(1000, 150);
-};
-
-
-/* =========================
-   CUSTOM TARGET
-========================= */
-
-customBtn.onclick = function() {
-
-  if (targetTime !== null) return;
-
-  customArea.classList.toggle(
-    "showing"
-  );
-
-  if (
-    customArea.classList.contains(
-      "showing"
-    )
-  ) {
-
-    customInput.focus();
-
-  }
-};
-
-
-/* =========================
-   SET SHARED CUSTOM TARGET
-========================= */
-
-setCustomBtn.onclick = function() {
-
-  const value =
-    parseFloat(
-      customInput.value
-    );
-
-  if (
-    !Number.isFinite(value) ||
-    value <= 0
-  ) {
-
-    alert(
-      "Enter a valid target."
-    );
-
-    return;
-  }
-
-  targetTime = value;
-
-  target.textContent =
-    formatTime(targetTime) +
-    "s";
-
-  status.textContent =
-    "Everyone's target is locked!";
-
-  startStopBtn.disabled = false;
-
-  randomBtn.disabled = true;
-
-  customBtn.disabled = true;
-
-  customArea.classList.remove(
-    "showing"
-  );
-
-  beep(1000, 150);
-};
-
-
-/* =========================
-   TIMER LOOP
-========================= */
-
-function updateTimer() {
-
-  if (!running) return;
-
-  elapsed =
-    (
-      performance.now() -
-      startTime
-    ) / 1000;
-
-  animationFrame =
-    requestAnimationFrame(
-      updateTimer
-    );
-}
-
-
-/* =========================
-   START / STOP
-========================= */
-
-startStopBtn.onclick = function() {
-
-  /* START */
-
-  if (
-    !running &&
-    !finished
-  ) {
-
-    startTime =
-      performance.now();
-
-    elapsed = 0;
-
-    running = true;
-
-    timer.textContent =
-      "--:--";
-
-    startStopBtn.textContent =
-      "■ Stop";
-
-    startStopBtn.classList.remove(
-      "start"
-    );
-
-    startStopBtn.classList.add(
-      "stop"
-    );
-
-    status.textContent =
-      "Timer running...";
-
-    beep(900, 200);
-
-    updateTimer();
-
-    return;
-  }
-
-
-  /* STOP */
-
-  if (running) {
-
-    elapsed =
-      (
-        performance.now() -
-        startTime
-      ) / 1000;
-
-    running = false;
-
-    finished = true;
-
-    cancelAnimationFrame(
-      animationFrame
-    );
-
-    startStopBtn.disabled =
-      true;
-
-    showBtn.disabled =
-      false;
-
-    status.textContent =
-      "Stopped! Reveal your time.";
-
-    beep(500, 250);
-  }
-};
-
-
-/* =========================
-   SHOW TIME
-========================= */
-
-showBtn.onclick = function() {
-
-  if (!finished) return;
-
-  timer.textContent =
-    formatTime(elapsed);
-
-  status.textContent =
-    "Actual time:";
-
-  const difference =
-    Math.abs(
-      elapsed -
-      targetTime
-    );
-
-
-  /* RESULT */
-
-  if (difference <= 0.05) {
-
-    result.className =
-      "result good";
-
-    result.textContent =
-      "🎯 PERFECT! " +
-      formatTime(difference) +
-      "s away!";
-
-  }
-
-  else if (difference <= 0.25) {
-
-    result.className =
-      "result close";
-
-    result.textContent =
-      "🔥 Very close! " +
-      formatTime(difference) +
-      "s away.";
-
-  }
-
-  else if (difference <= 1) {
-
-    result.className =
-      "result close";
-
-    result.textContent =
-      "👍 Close! " +
-      formatTime(difference) +
-      "s away.";
-
-  }
-
-  else {
-
-    result.className =
-      "result bad";
-
-    result.textContent =
-      "😅 " +
-      formatTime(difference) +
-      "s away.";
-  }
-
-
-  /* SAVE SCORE */
-
-  scores[currentPlayer] =
-    difference;
-
-  showBtn.disabled = true;
-
-
-  /* BEEP */
-
-  beep(1100, 220);
-
-  setTimeout(function() {
-    beep(1500, 250);
-  }, 180);
-
-
-  /* SCOREBOARD */
-
-  const round =
-    document.createElement("div");
-
-  round.className =
-    "round";
-
-  round.innerHTML =
-
-    "<span>Player " +
-    currentPlayer +
-    "</span>" +
-
-    "<span>" +
-    formatTime(elapsed) +
-    "s</span>" +
-
-    "<span>±" +
-    formatTime(difference) +
-    "s</span>";
-
-  historyList.prepend(round);
-
-
-  /* NEXT PLAYER */
-
-  if (
-    currentPlayer <
-    playerCount
-  ) {
-
-    nextArea.classList.remove(
-      "hidden"
-    );
-
-  }
-
-  else {
-
-    setTimeout(
-      showWinner,
-      500
-    );
-
-  }
-};
-
-
-/* =========================
-   NEXT PLAYER
-========================= */
-
-nextBtn.onclick = function() {
-
-  currentPlayer++;
-
-  resetRound();
-
-  status.textContent =
-    "Same target: " +
-    formatTime(targetTime) +
-    "s";
-
-  beep(900, 180);
-};
-
-
-/* =========================
-   WINNER
-========================= */
-
-function showWinner() {
-
-  let bestScore =
-    Infinity;
-
-  let winners = [];
-
-
-  for (
-    let i = 1;
-    i <= playerCount;
-    i++
-  ) {
-
-    if (
-      scores[i] !== null
-    ) {
-
-      if (
-        scores[i] <
-        bestScore
-      ) {
-
-        bestScore =
-          scores[i];
-
-        winners = [i];
-
-      }
-
-      else if (
-        scores[i] ===
-        bestScore
-      ) {
-
-        winners.push(i);
-
-      }
-    }
-  }
-
-
-  winner.classList.add(
-    "show"
-  );
-
-
-  if (
-    winners.length > 1
-  ) {
-
-    winnerName.textContent =
-      winners
-        .map(
-          p => "Player " + p
-        )
-        .join(" & ");
-
-    winnerScore.textContent =
-      "🏆 It's a tie!";
-
-  }
-
-  else {
-
-    winnerName.textContent =
-      "Player " +
-      winners[0];
-
-    winnerScore.textContent =
-      "Closest to " +
-      formatTime(targetTime) +
-      "s — only " +
-      formatTime(bestScore) +
-      "s away!";
-
-  }
-
-
-  /* WINNER BEEP */
-
-  beep(1200, 180);
-
-  setTimeout(function() {
-    beep(1500, 180);
-  }, 180);
-
-  setTimeout(function() {
-    beep(1800, 300);
-  }, 360);
-}
-
-
-/* =========================
-   NEW GAME
-========================= */
-
-newGameBtn.onclick = function() {
-
-  cancelAnimationFrame(
-    animationFrame
-  );
-
-  playerCount = 0;
-
-  currentPlayer = 1;
-
-  targetTime = null;
-
-  elapsed = 0;
-
-  running = false;
-
-  finished = false;
-
-  scores = {};
-
-  playerCountInput.value = "";
-
-  historyList.innerHTML = "";
-
-  gameArea.classList.add(
-    "hidden"
-  );
-
-  setup.classList.remove(
-    "hidden"
-  );
-
-  beep(700, 150);
-};
-
+  
 </script>
 
 </body>
