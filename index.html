@@ -1014,7 +1014,69 @@ let audio = null;
 
 let scores = {};
 
+/* =========================
+   BACKGROUND MUSIC
+========================= */
 
+const backgroundMusic =
+  document.getElementById(
+    "backgroundMusic"
+  );
+
+const musicBtn =
+  document.getElementById(
+    "musicBtn"
+  );
+
+let musicPlaying = false;
+
+
+musicBtn.onclick = function() {
+
+  if (!musicPlaying) {
+
+    backgroundMusic.volume = 0.25;
+
+    backgroundMusic.play()
+      .then(function() {
+
+        musicPlaying = true;
+
+        musicBtn.textContent =
+          "🎵 Music: ON";
+
+        musicBtn.classList.add(
+          "on"
+        );
+
+      })
+      .catch(function() {
+
+        alert(
+          "Tap the music button again to start the music."
+        );
+
+      });
+
+  }
+
+  else {
+
+    backgroundMusic.pause();
+
+    musicPlaying = false;
+
+    musicBtn.textContent =
+      "🎵 Music: OFF";
+
+    musicBtn.classList.remove(
+      "on"
+    );
+
+  }
+
+};
+  
 /* =========================
    ELEMENTS
 ========================= */
