@@ -831,6 +831,280 @@ button:disabled {
 
   color: #929daa;
 }
+
+/* ==================================================
+   PART 3 — GAME POLISH
+================================================== */
+
+
+/* =========================
+   PLAYER COLOUR DOT
+========================= */
+
+.player-colour-dot {
+  width: 10px;
+  height: 10px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #79bcef;
+
+  box-shadow:
+    0 0 12px rgba(121,188,239,.35);
+}
+
+
+/* =========================
+   PLAYER TURN PILL
+========================= */
+
+.player-turn {
+  gap: 9px;
+
+  padding: 0 20px;
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.18);
+}
+
+
+/* =========================
+   TARGET CARD
+========================= */
+
+.target-area {
+  padding: 18px 15px;
+
+  margin-bottom: 18px;
+
+  border-radius: 22px;
+
+  background: rgba(255,255,255,.018);
+
+  border: 1px solid #222b34;
+}
+
+.target-label {
+  margin-bottom: 5px;
+}
+
+.target {
+  line-height: 1.1;
+}
+
+
+/* =========================
+   TIMER CARD
+========================= */
+
+.timer-box {
+  position: relative;
+
+  isolation: isolate;
+}
+
+.timer-box::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: inherit;
+
+  border: 1px solid rgba(255,255,255,.025);
+
+  pointer-events: none;
+}
+
+.timer-box::after {
+  content: "";
+
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(100,170,220,.045),
+      transparent 68%
+    );
+
+  pointer-events: none;
+
+  z-index: -1;
+}
+
+
+/* =========================
+   TIMER NUMBER
+========================= */
+
+.timer {
+  z-index: 2;
+
+  font-variant-numeric:
+    tabular-nums;
+
+  white-space: nowrap;
+}
+
+
+/* =========================
+   GAME CONTROLS
+========================= */
+
+#startStopBtn,
+#showBtn {
+  min-height: 60px;
+}
+
+#randomBtn,
+#customBtn {
+  min-height: 52px;
+}
+
+
+/* =========================
+   RESULT CARD
+========================= */
+
+.result:not(:empty) {
+  padding: 14px 16px;
+
+  border-radius: 17px;
+
+  background: #0e1319;
+
+  border: 1px solid #252e37;
+}
+
+
+/* =========================
+   SCORE ROWS
+========================= */
+
+.round {
+  min-height: 48px;
+
+  padding: 13px 12px;
+
+  margin-bottom: 6px;
+
+  border: 1px solid #202830;
+
+  border-radius: 14px;
+
+  background: #0d1217;
+}
+
+.round:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================
+   WINNER GLOW
+========================= */
+
+.winner.show {
+  animation:
+    winnerAppear .35s ease-out;
+}
+
+@keyframes winnerAppear {
+
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+}
+
+
+/* =========================
+   BUTTON PRESS
+========================= */
+
+button:focus-visible {
+  outline: 2px solid #5c9dcc;
+
+  outline-offset: 3px;
+}
+
+
+/* =========================
+   GAME AREA SPACING
+========================= */
+
+#gameArea {
+  width: 100%;
+}
+
+#gameArea > * {
+  max-width: 100%;
+}
+
+
+/* =========================
+   SMOOTH APPEARANCE
+========================= */
+
+#setup,
+#nameSetup,
+#gameArea {
+  animation:
+    pageAppear .3s ease-out;
+}
+
+@keyframes pageAppear {
+
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================
+   MOBILE TIMER
+========================= */
+
+@media (max-width: 600px) {
+
+  .timer-box {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #startStopBtn,
+  #showBtn {
+    min-height: 58px;
+  }
+
+}
    
 </style>
 </head>
@@ -1167,6 +1441,16 @@ let audio = null;
 let scores = {};
 
 let playerNames = {};
+const playerColours = [
+  "#65b5ff",
+  "#9b8cff",
+  "#5ee6a8",
+  "#ffb86b",
+  "#ff7180",
+  "#63e6e2",
+  "#d18cff",
+  "#c9d45c"
+];
 
 /* =========================
    BACKGROUND MUSIC
@@ -1682,10 +1966,17 @@ backToCountBtn.onclick = function() {
 
 function resetRound() {
 
-playerTurn.textContent =
-    playerNames[currentPlayer] +
-    "'s Turn";
+playerTurn.innerHTML =
+  '<span class="player-colour-dot" style="background:' +
+  playerColours[
+    (currentPlayer - 1) %
+    playerColours.length
+  ] +
+  '"></span>' +
 
+  '<span>' +
+  playerNames[currentPlayer] +
+  "'s Turn</span>";
 
   timer.textContent =
     "--:--";
