@@ -1515,50 +1515,29 @@ function() {
    START GAME
 ========================= */
 
-startGameBtn.onclick =
-function() {
+startGameBtn.onclick = function() {
 
-  const inputs =
-    document.querySelectorAll(
-      ".player-name-input"
+  const value =
+    Number(playerCountInput.value);
+
+  if (
+    !Number.isFinite(value) ||
+    value < 1 ||
+    !Number.isInteger(value)
+  ) {
+
+    alert(
+      "Enter a whole number of players."
     );
 
+    return;
+  }
 
-  playerNames = [];
+  playerCount = value;
 
+  playerNameInputs.innerHTML = "";
 
-  inputs.forEach(
-    function(input, index) {
-
-      const name =
-        input.value.trim();
-
-
-      if (name.length > 0) {
-
-        playerNames.push(name);
-
-      }
-
-      else {
-
-        playerNames.push(
-          "Player " +
-          (index + 1)
-        );
-
-      }
-
-    }
-  );
-
-
-  /*
-     CREATE SCORE LIST
-  */
-
-  scores = {};
-
+  playerNames = {};
 
   for (
     let i = 1;
@@ -1566,43 +1545,66 @@ function() {
     i++
   ) {
 
-    scores[i] = null;
+    playerNames[i] =
+      "Player " + i;
 
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "player-name-row";
+
+    const number =
+      document.createElement("div");
+
+    number.className =
+      "player-number";
+
+    number.textContent =
+      i;
+
+    const input =
+      document.createElement("input");
+
+    input.type = "text";
+
+    input.className =
+      "player-name-input";
+
+    input.id =
+      "playerName" + i;
+
+    input.placeholder =
+      "Player " + i;
+
+    input.maxLength = 20;
+
+    input.autocomplete = "off";
+
+    row.appendChild(number);
+
+    row.appendChild(input);
+
+    playerNameInputs.appendChild(row);
   }
 
+  setup.classList.add("hidden");
 
-  currentPlayer = 1;
+  nameSetup.classList.remove("hidden");
 
-  targetTime = null;
+  const firstInput =
+    document.getElementById(
+      "playerName1"
+    );
 
-  setup.classList.add(
-    "hidden"
-  );
+  if (firstInput) {
+    setTimeout(
+      () => firstInput.focus(),
+      100
+    );
+  }
 
-  gameArea.classList.remove(
-    "hidden"
-  );
-
-
-  historyList.innerHTML = "";
-
-  target.textContent =
-    "--.--";
-
-  timer.textContent =
-    "--:--";
-
-
-  resetRound();
-
-
-  status.textContent =
-    playerNames[0] +
-    ": choose the target.";
-
-
-  beep(1000, 200);
-
+  beep(900, 180);
 };
 
 
