@@ -21,393 +21,645 @@
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+}
 
 body {
+  min-height: 100vh;
+  min-height: 100dvh;
 
-  margin:0;
-  min-height:100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  display:flex;
-  justify-content:center;
-  align-items:center;
-
-  background:
-  radial-gradient(circle at top,#24304d,#080a10);
-
-  color:white;
+  background: #0b0d10;
+  color: #f5f7fa;
 
   font-family:
-  -apple-system,
-  BlinkMacSystemFont,
-  Arial,
-  sans-serif;
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
 
-  padding:15px;
-
+  padding: 18px;
 }
 
+
+/* =========================
+   MAIN CARD
+========================= */
 
 .card {
+  width: 100%;
+  max-width: 560px;
 
-  width:100%;
-  max-width:520px;
+  margin: auto;
 
-  background:#191c29;
+  background: #171a1f;
 
-  border-radius:40px;
+  border: 1px solid #30363d;
 
-  padding:30px 22px;
+  border-radius: 36px;
 
-  text-align:center;
+  padding: 30px 22px;
+
+  text-align: center;
 
   box-shadow:
-  0 25px 70px #000;
-
+    0 20px 50px rgba(0, 0, 0, .55);
 }
 
+
+/* =========================
+   HEADINGS
+========================= */
 
 h1 {
+  margin: 0 0 10px;
 
-  font-size:38px;
+  font-size: clamp(30px, 8vw, 40px);
 
-  margin:0 0 10px;
+  font-weight: 800;
 
+  letter-spacing: -1px;
 }
 
+h2 {
+  margin: 15px 0;
+}
+
+h3 {
+  margin: 20px 0 5px;
+
+  color: #aeb7c4;
+
+  font-size: 13px;
+
+  letter-spacing: 1.5px;
+}
+
+
+/* =========================
+   SUBTITLE
+========================= */
 
 .subtitle {
+  color: #9da6b2;
 
-  color:#aeb5ca;
+  line-height: 1.5;
 
-  margin-bottom:25px;
-
+  margin-bottom: 25px;
 }
 
 
+/* =========================
+   INPUTS
+========================= */
 
 input {
+  width: 100%;
 
-  width:100%;
+  padding: 17px 20px;
 
-  padding:17px;
+  margin: 7px 0;
 
-  margin:8px 0;
+  border-radius: 50px;
 
-  border-radius:50px;
+  border: 1px solid #3a424d;
 
-  border:
+  outline: none;
 
-  1px solid #454a5d;
+  background: #0d0f12;
 
-  background:#080a10;
+  color: #ffffff;
 
-  color:white;
+  text-align: center;
 
-  text-align:center;
+  font-size: 17px;
 
-  font-size:18px;
-
+  transition:
+    border-color .2s,
+    box-shadow .2s;
 }
 
+input:focus {
+  border-color: #5faeff;
+
+  box-shadow:
+    0 0 0 3px rgba(95, 174, 255, .15);
+}
+
+input::placeholder {
+  color: #69727e;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
 
 button {
+  width: 100%;
 
-  width:100%;
+  min-height: 56px;
 
-  padding:17px;
+  margin: 7px 0;
 
-  margin:8px 0;
+  padding: 15px 18px;
 
-  border:0;
+  border: 1px solid #3b4652;
 
-  border-radius:50px;
+  border-radius: 50px;
 
-  background:#286e9d;
+  background: #252b33;
 
-  color:white;
+  color: #ffffff;
 
-  font-size:17px;
+  font-size: 16px;
 
-  font-weight:bold;
+  font-weight: 700;
 
+  cursor: pointer;
+
+  transition:
+    transform .12s,
+    background .2s,
+    border-color .2s;
 }
 
-
-button:active {
-
- transform:scale(.96);
-
+button:active:not(:disabled) {
+  transform: scale(.96);
 }
-
 
 button:disabled {
+  opacity: .35;
 
- opacity:.35;
-
+  cursor: not-allowed;
 }
 
 
-.hidden {
+/* =========================
+   BLUE BUTTONS
+========================= */
 
- display:none!important;
+#continuePlayersBtn,
+#startGameBtn,
+.next {
+  background: #256da8;
 
+  border-color: #418dcc;
+}
+
+#continuePlayersBtn:hover,
+#startGameBtn:hover,
+.next:hover {
+  background: #2d7fc1;
 }
 
 
-/* LOADING */
-
-#loading {
-
- position:fixed;
-
- inset:0;
-
- background:#0b0d14;
-
- display:flex;
-
- flex-direction:column;
-
- justify-content:center;
-
- align-items:center;
-
-}
-
-
-.loader {
-
- width:70px;
-
- height:70px;
-
- border-radius:50%;
-
- border:
-
- 8px solid #333;
-
- border-top-color:#63b3ff;
-
- animation:spin 1s linear infinite;
-
-}
-
-
-@keyframes spin {
-
- to {
-
- transform:rotate(360deg);
-
- }
-
-}
-
-
-
-/* GAME */
-
-
-.player-turn {
-
- font-size:30px;
-
- font-weight:bold;
-
- color:#63b3ff;
-
- margin:20px 0;
-
-}
-
-
-.target-box {
-
- background:#11131c;
-
- border-radius:30px;
-
- padding:20px;
-
-}
-
-
-.target {
-
- font-size:38px;
-
- font-weight:bold;
-
-}
-
-
-.timer-box {
-
- height:140px;
-
- margin:25px 0;
-
- background:#000;
-
- border-radius:40px;
-
- display:flex;
-
- justify-content:center;
-
- align-items:center;
-
-}
-
-
-.timer {
-
- font-family:monospace;
-
- font-size:
-
- clamp(55px,17vw,90px);
-
- font-weight:bold;
-
-}
-
-
-
-.status {
-
- color:#b7bdd0;
-
- min-height:25px;
-
-}
-
-
-.buttons {
-
- display:grid;
-
- grid-template-columns:1fr 1fr;
-
- gap:12px;
-
-}
-
+/* =========================
+   TARGET BUTTONS
+========================= */
 
 .random {
+  background: #1f6092;
 
- background:#24628c;
-
+  border-color: #3d8ac0;
 }
-
 
 .custom {
+  background: #444a52;
 
- background:#80562c;
-
+  border-color: #626b76;
 }
 
+
+/* =========================
+   START / STOP
+========================= */
 
 .start {
+  background: #176b4b;
 
- background:#247d51;
-
+  border-color: #2b9b70;
 }
-
 
 .stop {
+  background: #963c48;
 
- background:#a63e4b;
-
+  border-color: #c55b68;
 }
 
+
+/* =========================
+   SHOW BUTTON
+========================= */
 
 .show {
+  background: #3f6387;
 
- background:#6650a8;
-
+  border-color: #628eb8;
 }
 
+
+/* =========================
+   RESET
+========================= */
 
 .reset {
+  background: #20252b;
 
- background:#34394b;
+  border-color: #3b424b;
 
+  color: #cbd2da;
 }
 
 
+/* =========================
+   PLAYER TURN
+========================= */
+
+.player-turn {
+  margin: 22px 0;
+
+  font-size: clamp(25px, 7vw, 32px);
+
+  font-weight: 800;
+
+  color: #70b9f7;
+}
+
+
+/* =========================
+   TARGET
+========================= */
+
+.target-box {
+  background: #20252b;
+
+  border: 1px solid #353d46;
+
+  border-radius: 28px;
+
+  padding: 18px;
+
+  margin-top: 15px;
+}
+
+.target-label {
+  color: #89939f;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+}
+
+.target {
+  margin-top: 5px;
+
+  color: #ffffff;
+
+  font-size: 36px;
+
+  font-weight: 800;
+}
+
+
+/* =========================
+   STOPWATCH
+========================= */
+
+.timer-box {
+  width: 100%;
+
+  height: 145px;
+
+  margin: 24px 0;
+
+  background: #000000;
+
+  border: 2px solid #22272d;
+
+  border-radius: 34px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  overflow: hidden;
+
+  position: relative;
+}
+
+
+/*
+   Keeps anything else from
+   visually appearing behind
+   the stopwatch.
+*/
+
+.timer-box * {
+  background: transparent !important;
+
+  text-shadow: none !important;
+}
+
+.timer {
+  position: relative;
+
+  z-index: 2;
+
+  margin: 0;
+
+  padding: 0;
+
+  color: #ffffff;
+
+  font-family: ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size:
+    clamp(52px, 16vw, 88px);
+
+  font-weight: 800;
+
+  line-height: 1;
+
+  letter-spacing: 2px;
+
+  background: transparent;
+
+  text-shadow:
+    0 0 18px rgba(255,255,255,.08);
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+  min-height: 25px;
+
+  margin: 12px 0 18px;
+
+  color: #aeb7c2;
+
+  font-size: 15px;
+}
+
+
+/* =========================
+   TWO BUTTON LAYOUT
+========================= */
+
+.buttons {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+}
+
+
+/* =========================
+   CUSTOM TARGET BOX
+========================= */
 
 .name-box {
+  margin-top: 15px;
 
- background:#11131c;
+  padding: 18px;
 
- padding:20px;
+  background: #111419;
 
- border-radius:30px;
+  border: 1px solid #303740;
 
- margin-top:15px;
-
+  border-radius: 28px;
 }
 
 
+/* =========================
+   RESULT
+========================= */
 
 .result {
+  min-height: 35px;
 
- margin:20px 0;
+  margin: 20px 0;
 
- font-size:22px;
+  color: #ffffff;
 
- font-weight:bold;
+  font-size: 21px;
 
+  font-weight: 800;
 }
 
+
+/* =========================
+   WINNER
+========================= */
 
 .winner {
+  margin-top: 25px;
 
- background:#11131c;
+  padding: 25px 15px;
 
- border-radius:30px;
+  background: #111419;
 
- padding:25px;
+  border: 1px solid #343b44;
 
- margin-top:20px;
-
+  border-radius: 30px;
 }
-
 
 .winner-name {
+  margin: 10px 0;
 
- font-size:42px;
+  color: #70b9f7;
 
- color:#ffd166;
+  font-size: clamp(32px, 10vw, 46px);
 
- font-weight:bold;
+  font-weight: 900;
 
+  word-break: break-word;
 }
 
 
+/* =========================
+   SCORES
+========================= */
+
+#history {
+  margin-top: 30px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #2b3036;
+}
+
+#history h2 {
+  color: #aeb7c2;
+
+  font-size: 18px;
+}
 
 .round {
+  display: flex;
 
- background:#11131c;
+  justify-content: space-between;
 
- border-radius:20px;
+  align-items: center;
 
- padding:12px;
+  gap: 8px;
 
- margin:8px 0;
+  padding: 13px 15px;
 
- display:flex;
+  margin: 8px 0;
 
- justify-content:space-between;
+  background: #111419;
+
+  border: 1px solid #2b323a;
+
+  border-radius: 22px;
+
+  color: #e7ebef;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   LOADING SCREEN
+========================= */
+
+#loading {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  background: #0b0d10;
+
+  color: #ffffff;
+}
+
+#loading h1 {
+  margin-bottom: 25px;
+}
+
+.loader {
+  width: 65px;
+
+  height: 65px;
+
+  border-radius: 50%;
+
+  border: 7px solid #30363d;
+
+  border-top-color: #70b9f7;
+
+  animation:
+    spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================
+   HIDDEN
+========================= */
+
+.hidden {
+  display: none !important;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 500px) {
+
+  body {
+    padding: 10px;
+
+    align-items: center;
+  }
+
+  .card {
+    padding: 25px 16px;
+
+    border-radius: 30px;
+  }
+
+  .buttons {
+    gap: 8px;
+  }
+
+  button {
+    font-size: 15px;
+  }
+
+  .timer-box {
+    height: 125px;
+
+    border-radius: 30px;
+  }
 
 }
 
 
-</style>
+/* =========================
+   VERY SMALL PHONES
+========================= */
+
+@media (max-width: 360px) {
+
+  .card {
+    padding: 22px 12px;
+  }
+
+  .buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .timer-box {
+    height: 115px;
+  }
+
+}</style>
 </head>
 
 </head>
