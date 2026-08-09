@@ -1135,7 +1135,592 @@ function resetRound() {
 
 }
 
-  
+/* =========================
+   RANDOM TARGET
+========================= */
+
+randomBtn.onclick = function() {
+
+  if (targetTime !== null) return;
+
+
+  targetTime =
+    Math.random() * 14.9 + 0.1;
+
+
+  targetTime =
+    Math.round(
+      targetTime * 100
+    ) / 100;
+
+
+  target.textContent =
+    formatTime(targetTime) + "s";
+
+
+  status.textContent =
+    "🎯 Everyone's target is locked!";
+
+
+  startStopBtn.disabled = false;
+
+  randomBtn.disabled = true;
+
+  customBtn.disabled = true;
+
+
+  beep(1000, 150);
+
+};
+
+
+/* =========================
+   CUSTOM TARGET BUTTON
+========================= */
+
+customBtn.onclick = function() {
+
+  if (targetTime !== null) return;
+
+
+  customArea.classList.toggle(
+    "hidden"
+  );
+
+
+  if (
+    !customArea.classList.contains(
+      "hidden"
+    )
+  ) {
+
+    customInput.focus();
+
+  }
+
+};
+
+
+/* =========================
+   SET CUSTOM TARGET
+========================= */
+
+setCustomBtn.onclick = function() {
+
+  const value =
+    parseFloat(
+      customInput.value
+    );
+
+
+  if (
+    !Number.isFinite(value) ||
+    value <= 0
+  ) {
+
+    alert(
+      "Enter a valid target."
+    );
+
+    return;
+
+  }
+
+
+  targetTime = value;
+
+
+  target.textContent =
+    formatTime(targetTime) + "s";
+
+
+  status.textContent =
+    "🎯 Everyone's target is locked!";
+
+
+  startStopBtn.disabled = false;
+
+  randomBtn.disabled = true;
+
+  customBtn.disabled = true;
+
+
+  customArea.classList.add(
+    "hidden"
+  );
+
+
+  beep(1000, 150);
+
+};
+
+
+/* =========================
+   TIMER LOOP
+========================= */
+
+function updateTimer() {
+
+  if (!running) return;
+
+
+  elapsed =
+    (
+      performance.now() -
+      startTime
+    ) / 1000;
+
+
+  /*
+     We deliberately don't show
+     the time while running.
+
+     The player has to rely
+     on their own timing.
+  */
+
+  animationFrame =
+    requestAnimationFrame(
+      updateTimer
+    );
+
+}
+
+
+/* =========================
+   START / STOP BUTTON
+========================= */
+
+startStopBtn.onclick =
+function() {
+
+
+  /* =====================
+     START
+  ===================== */
+
+  if (
+    !running &&
+    !finished
+  ) {
+
+    startTime =
+      performance.now();
+
+
+    elapsed = 0;
+
+    running = true;
+
+
+    startStopBtn.textContent =
+      "■ Stop";
+
+
+    startStopBtn.classList.remove(
+      "start"
+    );
+
+    startStopBtn.classList.add(
+      "stop"
+    );
+
+
+    status.textContent =
+      "Timer running...";
+
+
+    beep(900, 200);
+
+
+    updateTimer();
+
+    return;
+
+  }
+
+
+  /* =====================
+     STOP
+  ===================== */
+
+  if (running) {
+
+    elapsed =
+      (
+        performance.now() -
+        startTime
+      ) / 1000;
+
+
+    running = false;
+
+    finished = true;
+
+
+    cancelAnimationFrame(
+      animationFrame
+    );
+
+
+    startStopBtn.disabled = true;
+
+    showBtn.disabled = false;
+
+
+    status.textContent =
+      "Stopped! Reveal your time.";
+
+
+    beep(500, 250);
+
+  }
+
+};
+
+
+/* =========================
+   SHOW TIME
+========================= */
+
+showBtn.onclick =
+function() {
+
+  if (!finished) return;
+
+
+  timer.textContent =
+    formatTime(elapsed);
+
+
+  status.textContent =
+    "Actual time:";
+
+
+  const difference =
+    Math.abs(
+      elapsed -
+      targetTime
+    );
+
+
+  /* =====================
+     RESULT MESSAGE
+  ===================== */
+
+  if (difference <= 0.05) {
+
+    result.className =
+      "result";
+
+    result.textContent =
+      "🎯 PERFECT! " +
+      formatTime(difference) +
+      "s away!";
+
+  }
+
+  else if (difference <= 0.25) {
+
+    result.className =
+      "result";
+
+    result.textContent =
+      "🔥 VERY CLOSE! " +
+      formatTime(difference) +
+      "s away.";
+
+  }
+
+  else if (difference <= 1) {
+
+    result.className =
+      "result";
+
+    result.textContent =
+      "👍 Close! " +
+      formatTime(difference) +
+      "s away.";
+
+  }
+
+  else {
+
+    result.className =
+      "result";
+
+    result.textContent =
+      "😅 " +
+      formatTime(difference) +
+      "s away.";
+
+  }
+
+
+  /* =====================
+     SAVE SCORE
+  ===================== */
+
+  scores[currentPlayer] =
+    difference;
+
+
+  showBtn.disabled = true;
+
+
+  /* =====================
+     REVEAL BEEP
+  ===================== */
+
+  beep(1100, 220);
+
+
+  setTimeout(
+    function() {
+
+      beep(1500, 250);
+
+    },
+    180
+  );
+
+
+  /* =====================
+     ADD SCORE
+  ===================== */
+
+  const round =
+    document.createElement("div");
+
+
+  round.className =
+    "round";
+
+
+  round.innerHTML =
+
+    "<span>" +
+
+    playerNames[
+      currentPlayer - 1
+    ] +
+
+    "</span>" +
+
+    "<span>" +
+
+    formatTime(elapsed) +
+
+    "s</span>" +
+
+    "<span>±" +
+
+    formatTime(difference) +
+
+    "s</span>";
+
+
+  historyList.prepend(
+    round
+  );
+
+
+  /* =====================
+     NEXT PLAYER
+  ===================== */
+
+  if (
+    currentPlayer <
+    playerCount
+  ) {
+
+    nextArea.classList.remove(
+      "hidden"
+    );
+
+  }
+
+  else {
+
+    setTimeout(
+      showWinner,
+      500
+    );
+
+  }
+
+};
+
+
+/* =========================
+   NEXT PLAYER
+========================= */
+
+nextBtn.onclick =
+function() {
+
+  currentPlayer++;
+
+
+  resetRound();
+
+
+  status.textContent =
+    "Same target: " +
+    formatTime(targetTime) +
+    "s";
+
+
+  beep(900, 180);
+
+};
+
+
+/* =========================
+   WINNER
+========================= */
+
+function showWinner() {
+
+  let bestScore =
+    Infinity;
+
+
+  let winners = [];
+
+
+  /*
+     FIND BEST SCORE
+  */
+
+  for (
+    let i = 1;
+    i <= playerCount;
+    i++
+  ) {
+
+    if (
+      scores[i] !== null &&
+      scores[i] !== undefined
+    ) {
+
+
+      if (
+        scores[i] <
+        bestScore
+      ) {
+
+        bestScore =
+          scores[i];
+
+        winners = [i];
+
+      }
+
+      else if (
+        scores[i] ===
+        bestScore
+      ) {
+
+        winners.push(i);
+
+      }
+
+    }
+
+  }
+
+
+  winner.classList.remove(
+    "hidden"
+  );
+
+
+  /* =====================
+     TIE
+  ===================== */
+
+  if (
+    winners.length > 1
+  ) {
+
+    winnerName.textContent =
+      winners
+        .map(
+          function(player) {
+
+            return playerNames[
+              player - 1
+            ];
+
+          }
+        )
+        .join(" & ");
+
+
+    winnerScore.textContent =
+      "🏆 It's a tie!";
+
+  }
+
+
+  /* =====================
+     SINGLE WINNER
+  ===================== */
+
+  else {
+
+    const winningPlayer =
+      winners[0];
+
+
+    winnerName.textContent =
+      playerNames[
+        winningPlayer - 1
+      ];
+
+
+    winnerScore.textContent =
+      "Closest to " +
+
+      formatTime(targetTime) +
+
+      "s — only " +
+
+      formatTime(bestScore) +
+
+      "s away!";
+
+  }
+
+
+  /* =====================
+     WINNER BEEP
+  ===================== */
+
+  beep(1200, 180);
+
+
+  setTimeout(
+    function() {
+
+      beep(1500, 180);
+
+    },
+    180
+  );
+
+
+  setTimeout(
+    function() {
+
+      beep(1800, 300);
+
+    },
+    360
+  );
+
+}
 </script>
 
 </body>
