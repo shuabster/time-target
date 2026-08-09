@@ -1608,6 +1608,62 @@ startGameBtn.onclick = function() {
 };
 
 
+confirmPlayersBtn.onclick = function() {
+
+  playerNames = {};
+
+  for (
+    let i = 1;
+    i <= playerCount;
+    i++
+  ) {
+
+    const input =
+      document.getElementById(
+        "playerName" + i
+      );
+
+    let name =
+      input.value.trim();
+
+    if (!name) {
+      name = "Player " + i;
+    }
+
+    playerNames[i] = name;
+  }
+
+
+  currentPlayer = 1;
+
+  scores = {};
+
+  for (
+    let i = 1;
+    i <= playerCount;
+    i++
+  ) {
+
+    scores[i] = null;
+  }
+
+
+  nameSetup.classList.add("hidden");
+
+  gameArea.classList.remove("hidden");
+
+  historyList.innerHTML = "";
+
+  resetRound();
+
+  status.textContent =
+    playerNames[1] +
+    ": choose the target.";
+
+  beep(900, 180);
+};
+
+
 /* =========================
    RESET ROUND
 ========================= */
