@@ -741,22 +741,62 @@ button:disabled {
        PLAYER SETUP
   ========================= -->
 
-  <div id="setup">
+ <div id="setup">
 
-    <h2>👥 How many players?</h2>
+  <div class="setup-icon">
+    👥
+  </div>
 
-    <input
-      id="playerCountInput"
-      type="number"
-      min="1"
-      step="1"
-      inputmode="numeric"
-      placeholder="Enter number of players"
-    >
+  <h2>How many players?</h2>
 
-    <button id="continuePlayersBtn">
-      Continue →
-    </button>
+  <p class="setup-description">
+    Choose the number of players for this game.
+  </p>
+
+  <input
+    id="playerCountInput"
+    type="number"
+    min="1"
+    max="20"
+    step="1"
+    inputmode="numeric"
+    placeholder="Number of players"
+  >
+
+  <button id="startGameBtn" class="primary-button">
+    Continue →
+  </button>
+
+</div>
+
+
+<!-- =========================
+     PLAYER NAMES
+========================= -->
+
+<div id="nameSetup" class="hidden">
+
+  <div class="setup-icon">
+    ✏️
+  </div>
+
+  <h2>Name your players</h2>
+
+  <p class="setup-description">
+    Give everyone a name before the game starts.
+  </p>
+
+  <div id="playerNameInputs"></div>
+
+  <button id="confirmPlayersBtn" class="primary-button">
+    🎮 Start Game
+  </button>
+
+  <button id="backToCountBtn" class="secondary-button">
+    ← Back
+  </button>
+
+</div>
 
 
     <!-- NAME SETUP -->
@@ -776,9 +816,6 @@ button:disabled {
       </button>
 
     </div>
-
-  </div>
-
 
   <!-- =========================
        GAME AREA
