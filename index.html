@@ -1216,23 +1216,7 @@ button:focus-visible {
 </div>
 
 
-    <!-- NAME SETUP -->
-
-    <div id="nameSetup" class="name-box hidden">
-
-      <h2>✏️ Player Names</h2>
-
-      <p class="subtitle">
-        Give everyone a name
-      </p>
-
-      <div id="nameInputs"></div>
-
-      <button id="startGameBtn">
-        🚀 Start Game
-      </button>
-
-    </div>
+  
 
   <!-- =========================
        GAME AREA
@@ -1247,7 +1231,7 @@ button:focus-visible {
 
     <!-- SHARED TARGET -->
 
-    <div class="target-box">
+   <div class="target-area">
 
       <div class="target-label">
         EVERYONE'S TARGET
@@ -1299,10 +1283,10 @@ button:focus-visible {
 
     <!-- CUSTOM TARGET -->
 
-    <div
-      id="customArea"
-      class="name-box hidden"
-    >
+   <div
+  id="customArea"
+  class="custom-area"
+>
 
       <input
         id="customInput"
@@ -1423,7 +1407,7 @@ button:focus-visible {
 ========================= */
 
 let playerCount = 0;
-let playerNames = [];
+let playerNames = {};
 let currentPlayer = 1;
 
 let targetTime = null;
@@ -1440,7 +1424,6 @@ let audio = null;
 
 let scores = {};
 
-let playerNames = {};
 const playerColours = [
   "#65b5ff",
   "#9b8cff",
@@ -1545,15 +1528,6 @@ document.getElementById("gameArea");
 
 const playerCountInput =
 document.getElementById("playerCountInput");
-
-const continuePlayersBtn =
-document.getElementById("continuePlayersBtn");
-
-const nameSetup =
-document.getElementById("nameSetup");
-
-const nameInputs =
-document.getElementById("nameInputs");
 
 const startGameBtn =
 document.getElementById("startGameBtn");
@@ -1710,89 +1684,6 @@ function formatTime(seconds) {
 }
 
 
-/* =========================
-   CHOOSE PLAYER COUNT
-========================= */
-
-continuePlayersBtn.onclick =
-function() {
-
-  const value =
-    Number(
-      playerCountInput.value
-    );
-
-
-  if (
-    !Number.isFinite(value) ||
-    value < 1 ||
-    !Number.isInteger(value)
-  ) {
-
-    alert(
-      "Enter a whole number of players."
-    );
-
-    return;
-
-  }
-
-
-  playerCount = value;
-
-
-  /*
-     CREATE NAME INPUTS
-  */
-
-  nameInputs.innerHTML = "";
-
-
-  for (
-    let i = 1;
-    i <= playerCount;
-    i++
-  ) {
-
-    const input =
-      document.createElement("input");
-
-    input.type = "text";
-
-    input.className =
-      "player-name-input";
-
-    input.placeholder =
-      "Player " + i;
-
-    input.value =
-      "Player " + i;
-
-    input.maxLength = 30;
-
-    nameInputs.appendChild(input);
-
-  }
-
-
-  nameSetup.classList.remove(
-    "hidden"
-  );
-
-
-  continuePlayersBtn.classList.add(
-    "hidden"
-  );
-
-
-  playerCountInput.classList.add(
-    "hidden"
-  );
-
-
-  beep(900, 180);
-
-};
 
 
 /* =========================
@@ -2406,27 +2297,29 @@ function() {
     "round";
 
 
-  round.innerHTML =
+const playerColour =
+  playerColours[
+    (currentPlayer - 1) %
+    playerColours.length
+  ];
 
-    "<span>" +
+round.innerHTML =
 
-    playerNames[
-      currentPlayer - 1
-    ] +
+  '<span style="color:' +
+  playerColour +
+  ';font-weight:700;">' +
 
-    "</span>" +
+  playerNames[currentPlayer] +
 
-    "<span>" +
+  '</span>' +
 
-    formatTime(elapsed) +
+  '<span>' +
+  formatTime(elapsed) +
+  's</span>' +
 
-    "s</span>" +
-
-    "<span>±" +
-
-    formatTime(difference) +
-
-    "s</span>";
+  '<span>±' +
+  formatTime(difference) +
+  's</span>';
 
 
   historyList.prepend(
@@ -2553,18 +2446,18 @@ function showWinner() {
     winners.length > 1
   ) {
 
-    winnerName.textContent =
-      winners
-        .map(
-          function(player) {
+winnerName.textContent =
+  winners
+    .map(
+      p => playerNames[p]
+    )
+    .join(" & ");
 
-            return playerNames[
-              player - 1
-            ];
-
-          }
-        )
-        .join(" & ");
+winnerName.style.color =
+  playerColours[
+    (winners[0] - 1) %
+    playerColours.length
+  ];
 
 
     winnerScore.textContent =
@@ -2584,9 +2477,13 @@ function showWinner() {
 
 
     winnerName.textContent =
-      playerNames[
-        winningPlayer - 1
-      ];
+  playerNames[winners[0]];
+
+winnerName.style.color =
+  playerColours[
+    (winners[0] - 1) %
+    playerColours.length
+  ];
 
 
     winnerScore.textContent =
@@ -2646,7 +2543,7 @@ newGameBtn.onclick = function() {
 
   playerCount = 0;
 
-  playerNames = [];
+  playerNames = {};
 
   currentPlayer = 1;
 
@@ -2668,8 +2565,6 @@ newGameBtn.onclick = function() {
   /* RESET INPUTS */
 
   playerCountInput.value = "";
-
-  nameInputs.innerHTML = "";
 
   customInput.value = "";
 
@@ -2733,14 +2628,14 @@ newGameBtn.onclick = function() {
 ========================= */
 
 playerCountInput.addEventListener(
-  "input",
-  function() {
+  "keydown",
+  function(event) {
 
     if (
-      Number(this.value) < 1
+      event.key === "Enter"
     ) {
 
-      this.value = "";
+      startGameBtn.click();
 
     }
 
