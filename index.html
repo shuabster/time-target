@@ -174,6 +174,64 @@ input:focus {
 }
 
 
+   /* =========================
+   MUSIC BUTTON
+========================= */
+
+.music-button {
+  position: fixed;
+
+  top: 18px;
+  right: 18px;
+
+  z-index: 9999;
+
+  min-height: 44px;
+  padding: 10px 15px;
+
+  border-radius: 999px;
+
+  background: #181e25;
+  border: 1px solid #303943;
+
+  color: #929daa;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.25);
+}
+
+.music-button:hover {
+  background: #202832;
+  border-color: #43505d;
+}
+
+.music-button.on {
+  background: #173c2c;
+  border-color: #285b45;
+  color: #83e0b1;
+
+  box-shadow:
+    0 0 18px rgba(94,230,168,.18);
+}
+
+@media (max-width: 600px) {
+
+  .music-button {
+    top: 12px;
+    right: 12px;
+
+    min-height: 42px;
+
+    padding: 9px 12px;
+
+    font-size: 12px;
+  }
+
+}
+
 /* =========================
    BUTTONS
 ========================= */
@@ -836,14 +894,20 @@ button:disabled {
 ========================= */
 
 .player-colour-dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
 
-  flex-shrink: 0;
+  flex: 0 0 12px;
 
   border-radius: 50%;
 
-  background: #79bcef;
+  background: #65b5ff;
+
+  box-shadow:
+    0 0 14px rgba(101,181,255,.55);
+
+  border: 1px solid rgba(255,255,255,.25);
+}
 
   box-shadow:
     0 0 12px rgba(121,188,239,.35);
@@ -1694,11 +1758,19 @@ startGameBtn.onclick = function() {
     Number(playerCountInput.value);
 
   if (
-  if (
-  !Number.isFinite(value) ||
-  value <= 0 ||
-  value > 999.99
-) {
+    !Number.isInteger(value) ||
+    value < 1 ||
+    value > 20
+  ) {
+
+    alert(
+      "Enter a whole number of players (1–20)."
+    );
+
+    return;
+  }
+
+  playerCount = value;
 
     alert(
       "Enter a whole number of players."
@@ -1856,15 +1928,22 @@ backToCountBtn.onclick = function() {
 
 function resetRound() {
 
-playerTurn.innerHTML =
-  '<span class="player-colour-dot" style="background:' +
+const currentColour =
   playerColours[
     (currentPlayer - 1) %
     playerColours.length
-  ] +
-  '"></span>' +
+  ];
 
-  '<span>' +
+playerTurn.innerHTML =
+  '<span class="player-colour-dot" style="background-color:' +
+  currentColour +
+  ';box-shadow:0 0 12px ' +
+  currentColour +
+  '66;"></span>' +
+
+  '<span style="color:' +
+  currentColour +
+  ';">' +
   playerNames[currentPlayer] +
   "'s Turn</span>";
 
@@ -2523,18 +2602,15 @@ winnerName.style.color =
 
 }
 
-/* =========================
-   NEW GAME
-========================= */
-
 newGameBtn.onclick = function() {
 
   cancelAnimationFrame(
     animationFrame
   );
 
-
-  /* RESET GAME STATE */
+  /* =====================
+     RESET GAME STATE
+  ===================== */
 
   playerCount = 0;
 
@@ -2557,57 +2633,87 @@ newGameBtn.onclick = function() {
   scores = {};
 
 
-  /* RESET INPUTS */
+  /* =====================
+     RESET INPUTS
+  ===================== */
 
   playerCountInput.value = "";
 
   customInput.value = "";
 
 
-  /* RESET SCREENS */
+  /* =====================
+     RESET SCREENS
+  ===================== */
 
-  gameArea.classList.add(
-    "hidden"
-  );
+  gameArea.classList.add("hidden");
 
-  nameSetup.classList.add(
-    "hidden"
-  );
+  nameSetup.classList.add("hidden");
+
+  setup.classList.remove("hidden");
 
 
-  /* RESET GAME DISPLAY */
+  /* =====================
+     RESET DISPLAY
+  ===================== */
 
-  target.textContent =
-    "--.--";
+  target.textContent = "--.--";
 
-  timer.textContent =
-    "--:--";
+  timer.textContent = "--:--";
 
   result.textContent = "";
 
+  result.className = "result";
+
   historyList.innerHTML = "";
 
-
-  winner.classList.add(
-    "hidden"
-  );
+  playerNameInputs.innerHTML = "";
 
 
-  /* GO BACK TO SETUP */
+  /* =====================
+     RESET BUTTONS
+  ===================== */
 
-  setup.classList.remove(
-    "hidden"
-  );
+  startStopBtn.textContent = "▶ Start";
 
+  startStopBtn.classList.remove("stop");
+  startStopBtn.classList.add("start");
+
+  startStopBtn.disabled = true;
+
+  showBtn.disabled = true;
+
+  randomBtn.disabled = false;
+
+  customBtn.disabled = false;
+
+  customArea.classList.add("hidden");
+
+  nextArea.classList.add("hidden");
+
+  winner.classList.add("hidden");
+
+
+  /* =====================
+     RESET STATUS
+  ===================== */
 
   status.textContent =
     "Choose the target.";
 
 
+  /* =====================
+     RESET PLAYER TURN
+  ===================== */
+
+  playerTurn.innerHTML =
+    '<span class="player-colour-dot"></span>' +
+    '<span>Player 1\'s Turn</span>';
+
+
   beep(700, 150);
 
 };
-
 
 /* =========================
    PREVENT NEGATIVE / WEIRD
@@ -2653,34 +2759,23 @@ customInput.addEventListener(
    AUDIO UNLOCK FOR IOS
 ========================= */
 
-if (!audio) {
-
-  const AudioContext =
-    window.AudioContext ||
-    window.webkitAudioContext;
-
-  if (!AudioContext) {
-    return;
-  }
-
-  audio = new AudioContext();
-
-}
+document.addEventListener(
+  "touchstart",
   function() {
 
-  if (!audio) {
+    if (!audio) {
 
-  const AudioContext =
-    window.AudioContext ||
-    window.webkitAudioContext;
+      const AudioContext =
+        window.AudioContext ||
+        window.webkitAudioContext;
 
-  if (!AudioContext) {
-    return;
-  }
+      if (!AudioContext) {
+        return;
+      }
 
-  audio = new AudioContext();
+      audio = new AudioContext();
 
-}
+    }
 
     if (
       audio.state === "suspended"
@@ -2691,7 +2786,7 @@ if (!audio) {
     }
 
   },
-  { once:true }
+  { once: true }
 );
 
 </script>
