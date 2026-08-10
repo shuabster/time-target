@@ -457,8 +457,6 @@ button:disabled {
 ========================= */
 
 .custom-area {
-  display: none;
-
   margin-top: 14px;
   padding: 16px;
 
@@ -467,10 +465,6 @@ button:disabled {
   border: 1px solid #252e37;
 
   border-radius: 20px;
-}
-
-.custom-area.showing {
-  display: block;
 }
 
 .custom-area button {
@@ -1142,7 +1136,7 @@ button:focus-visible {
      MAIN APP
 ========================= -->
 
-<div id="app" class="card hidden">
+<div id="app" class="game hidden">
 
   <h1>⏱️ Time Target</h1>
 
@@ -1286,14 +1280,15 @@ button:focus-visible {
   class="custom-area"
 >
 
-      <input
-        id="customInput"
-        type="number"
-        min="0.01"
-        step="0.01"
-        inputmode="decimal"
-        placeholder="Target in seconds"
-      >
+    <input
+  id="customInput"
+  type="number"
+  min="0.01"
+  max="999.99"
+  step="0.01"
+  inputmode="decimal"
+  placeholder="Target in seconds"
+>
 
       <button id="setCustomBtn">
         Set Target For Everyone
@@ -1354,9 +1349,11 @@ button:focus-visible {
       class="winner hidden"
     >
 
-      <div>
-        🏆 WINNER
-      </div>
+      <div class="winner-title">
+
+  🏆 WINNER
+
+</div>
 
       <div
         id="winnerName"
@@ -1365,7 +1362,10 @@ button:focus-visible {
         Player 1
       </div>
 
-      <div id="winnerScore"></div>
+      <div
+  id="winnerScore"
+  class="winner-score"
+></div>
 
     </div>
 
@@ -1694,10 +1694,11 @@ startGameBtn.onclick = function() {
     Number(playerCountInput.value);
 
   if (
-    !Number.isFinite(value) ||
-    value < 1 ||
-    !Number.isInteger(value)
-  ) {
+  if (
+  !Number.isFinite(value) ||
+  value <= 0 ||
+  value > 999.99
+) {
 
     alert(
       "Enter a whole number of players."
@@ -2418,9 +2419,8 @@ function showWinner() {
       }
 
       else if (
-        scores[i] ===
-        bestScore
-      ) {
+  Math.abs(scores[i] - bestScore) < 0.000001
+) {
 
         winners.push(i);
 
@@ -2469,9 +2469,6 @@ winnerName.style.color =
   ===================== */
 
   else {
-
-    const winningPlayer =
-      winners[0];
 
 
     winnerName.textContent =
@@ -2577,14 +2574,6 @@ newGameBtn.onclick = function() {
     "hidden"
   );
 
-  continuePlayersBtn.classList.remove(
-    "hidden"
-  );
-
-  playerCountInput.classList.remove(
-    "hidden"
-  );
-
 
   /* RESET GAME DISPLAY */
 
@@ -2629,36 +2618,15 @@ playerCountInput.addEventListener(
   "keydown",
   function(event) {
 
-    if (
-      event.key === "Enter"
-    ) {
-
+    if (event.key === "Enter") {
       startGameBtn.click();
-
     }
 
   }
 );
 
 
-/* =========================
-   ENTER KEY SUPPORT
-========================= */
 
-playerCountInput.addEventListener(
-  "keydown",
-  function(event) {
-
-    if (
-      event.key === "Enter"
-    ) {
-
-      continuePlayersBtn.click();
-
-    }
-
-  }
-);
 
 
 /* =========================
@@ -2685,18 +2653,34 @@ customInput.addEventListener(
    AUDIO UNLOCK FOR IOS
 ========================= */
 
-document.addEventListener(
-  "touchstart",
+if (!audio) {
+
+  const AudioContext =
+    window.AudioContext ||
+    window.webkitAudioContext;
+
+  if (!AudioContext) {
+    return;
+  }
+
+  audio = new AudioContext();
+
+}
   function() {
 
-    if (!audio) {
+  if (!audio) {
 
-      audio = new (
-        window.AudioContext ||
-        window.webkitAudioContext
-      )();
+  const AudioContext =
+    window.AudioContext ||
+    window.webkitAudioContext;
 
-    }
+  if (!AudioContext) {
+    return;
+  }
+
+  audio = new AudioContext();
+
+}
 
     if (
       audio.state === "suspended"
